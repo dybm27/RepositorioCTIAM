@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class DocumentosTable extends Migration
+class CreateDocumentosTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,14 @@ class DocumentosTable extends Migration
      */
     public function up()
     {
-        Schema::create("documentos", function (Blueprint $table){
-            $table->increments("id");
+        Schema::create('documentos', function (Blueprint $table) {
+            $table->increments('id');
             $table->string("nombre");
             $table->string("descripcion");
             $table->string("ruta");
+            /*$table->unsignedInteger("audiovisual_id");
+            $table->foreign("audiovisual_id")->references("id")->on("audiovisual");*/
+            $table->timestamps();
         });
     }
 
@@ -28,6 +31,6 @@ class DocumentosTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists("documentos");
+        Schema::dropIfExists('documentos');
     }
 }

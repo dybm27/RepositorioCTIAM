@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class PiezasaudiovisualesTable extends Migration
+class CreateAudiovisualTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,12 @@ class PiezasaudiovisualesTable extends Migration
      */
     public function up()
     {
-        Schema::create("audiovisual", function (Blueprint $table){
-            $table->increments("id");
+        Schema::create('audiovisual', function (Blueprint $table) {
+            $table->increments('id');
             $table->string("nombre");
             $table->string("descripcion");
             $table->string("ruta");
+            $table->timestamps();
         });
     }
 
@@ -28,6 +29,6 @@ class PiezasaudiovisualesTable extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('audiovisual');
     }
 }
