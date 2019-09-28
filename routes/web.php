@@ -15,6 +15,4 @@
     return view('welcome');
 });*/
 
-Route::get("/",function (){
-   return "hola";
-});
+Route::get('/admin','InicioController@index');
