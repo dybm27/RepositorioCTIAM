@@ -47,12 +47,12 @@
         
         <!-- Content Header (Page header) -->
         <section class="content-header">
-          Titulo
+          @yield('titulo1')
         </section>
 
         <!-- Main content -->
         <section class="content">
-          Contenido
+          @yield('contenido')
         </section>
         <!-- /.content -->
 
@@ -92,5 +92,6 @@
     <script src="{{asset("assets/$theme/dist/js/pages/dashboard2.js")}}"></script>
     <!-- AdminLTE for demo purposes -->
     <script src="{{asset("assets/$theme/dist/js/demo.js")}}"></script>
+    @yield('script')
   </body>
 </html>

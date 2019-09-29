@@ -13,7 +13,9 @@ class Documento extends Model
     protected $fillable =[
         'nombre',
         'descripcion',
+        'extension',
         'ruta'
     ];
 
+    protected $guarded=['id'];
 }

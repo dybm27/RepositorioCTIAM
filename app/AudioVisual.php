@@ -12,7 +12,8 @@ class AudioVisual extends Model
 
     protected $fillable= [
         'nombre',
-        'descripcion',
         'ruta'
     ];
+
+    protected $guarded=['id'];
 }
