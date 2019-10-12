@@ -32,15 +32,15 @@
             </span>
           </a>
           <ul class="treeview-menu">
-            <li><a href="#"><i class="fa fa-circle-o"></i> Documentos</a></li>
-            <li><a href="#"><i class="fa fa-circle-o"></i> Piezas Audiovisuales</a></li>
+            <li><a href="{{route('listar_documentos')}}"><i class="fa fa-circle-o"></i> Documentos</a></li>
+            <li><a href="{{route('listar_audiovisuales')}}"><i class="fa fa-circle-o"></i> Piezas Audiovisuales</a></li>
             <li><a href="#"><i class="fa fa-circle-o"></i> Revistas</a></li>
             <li><a href="#"><i class="fa fa-circle-o"></i> Libros</a></li>
             <li><a href="#"><i class="fa fa-circle-o"></i> Material de Capacitacion</a></li>
           </ul>
         </li>
         <li>
-          <a href="#">
+          <a href="{{route('listar_usuarios')}}">
             <i class="fa fa-users"></i>
             <span>Gestionar Usuarios</span>
             <span class="pull-right-container">

@@ -17,9 +17,13 @@ class CreateUsersTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->string('email')->unique();
+            $table->unsignedInteger('tipouser_id');
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
+
+            $table->foreign('tipouser_id')
+                  ->references('id')->on('tipousuario');
         });
     }
 

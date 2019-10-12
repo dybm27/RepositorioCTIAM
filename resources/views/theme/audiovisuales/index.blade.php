@@ -1,7 +1,7 @@
 @extends("theme.$theme.layout")
 
 @section('titulo')
-    Documentos
+    AudioVisuales
 @endsection
 
 @section('titulo1')
@@ -13,7 +13,7 @@
         <div class="col-xs-12">
             <div class="box">
                 <div class="box-header">
-                    <h3 class="box-title">Documentos</h3>
+                    <h3 class="box-title">AudioVisuales</h3>
                 </div>
                 <div class="box-body">
                     <table id="tabla" class="table table-bordered table-striped">
@@ -27,20 +27,20 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($documentos as $documento)
+                            @foreach ($audiovisuales as $audiovisual)
                                 <tr>
-                                    <td>{{$documento->id}}</td>
-                                    <td>{{$documento->nombre}}</td>
-                                    <td>{{$documento->descripcion}}</td>
-                                    <td><a href="gestionarDocumentos/descargar/{{$documento->id}}"><img src={{asset("iconos/$documento->extension.png")}}></a></td>
+                                    <td>{{$audiovisual->id}}</td>
+                                    <td>{{$audiovisual->nombre}}</td>
+                                    <td>{{$audiovisual->descripcion}}</td>
+                                    <td><a href="gestionarAudioVisuales/descargar/{{$audiovisual->id}}"><img src={{asset("iconos/$audiovisual->extension.png")}}></a></td>
                                     <td></td>
                                 </tr>  
                             @endforeach                          
                         </tbody>
                     </table>
                     <div class="box-footer">
-                        <button  onclick="location.href='{{route('formulario_agregar_documento')}}'" 
-                        class="btn btn-primary">Agregar Nuevo Documento</button>
+                    <button  onclick="location.href='{{route('formulario_agregar_audiovisual')}}'"
+                     class="btn btn-primary">Agregar Nuevo AudioVisual</button>
                     </div>
                 </div>
             </div>

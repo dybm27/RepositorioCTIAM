@@ -12,6 +12,8 @@ class AudioVisual extends Model
 
     protected $fillable= [
         'nombre',
+        'descripcion',
+        'extension',
         'ruta'
     ];
 

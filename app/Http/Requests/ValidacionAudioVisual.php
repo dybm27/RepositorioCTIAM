@@ -4,7 +4,7 @@ namespace RepoCTIAM\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ValidacionDocumento extends FormRequest
+class ValidacionAudioVisual extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +24,7 @@ class ValidacionDocumento extends FormRequest
     public function rules()
     {
         return [
-            'documento' => 'required|mimes:docx,doc,pdf,pptx,xlsx',
+            'audiovisual' => 'required', //|mimes:mp3,mp4
             'descripcion' => 'required'
         ];
     }

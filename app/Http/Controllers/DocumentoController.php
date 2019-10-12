@@ -5,6 +5,7 @@ namespace RepoCTIAM\Http\Controllers;
 use RepoCTIAM\Documento;
 use Illuminate\Http\Request;
 use RepoCTIAM\Http\Requests\ValidacionDocumento;
+use Toastr;
 
 class DocumentoController extends Controller
 {
@@ -37,33 +38,31 @@ class DocumentoController extends Controller
      */
     public function store(ValidacionDocumento $request)
     {
-      if ($request->hasFile('documento')) {
            //obtenemos el campo file definido en el formulario
-       $file = $request->file('documento');
-        
-       //obtenemos el nombre del archivo
-       $fileName = $file->getClientOriginalName();
-       $nombre=explode('.',$fileName)[0];
-       $extension = explode('.',$fileName)[1];
-        if(strcmp($extension,'pdf')==0||strcmp($extension,'docx')==0||strcmp($extension,'doc')==0
-            ||strcmp($extension,'pptx')==0||strcmp($extension,'xlsx')==0){
-            //indicamos que queremos guardar un nuevo archivo en la carpeta publica
-            // \Storage::disk('local')->put($nombre,  \File::get($file));
+            $file = $request->file('documento');
+                
+            //obtenemos el nombre del archivo
+            $fileName = $file->getClientOriginalName();
+         
+            $nombre=explode('.',$fileName)[0];
+            $extension = explode('.',$fileName)[1];
+            
             $file->move(storage_path().'/documentos',$fileName);
-            $ruta=storage_path().$fileName;
+            $ruta='../storage/documentos/'.$fileName;
 
-            Documento::create([
+            $documento = Documento::create([
                 'nombre' => $nombre,
                 'descripcion' => $request['descripcion'],
                 'extension' => $extension,
                 'ruta' => $ruta
                 ]);
-            return redirect('admin/gestionarDocumentos')->with('mensaje','ok');
-        }else {
-            return 'Tipo de documento erroneo';    
-        }
-      }
-      return 'no entro';
+
+
+                Toastr::success('Registro exitoso','Excelente!!!', 
+                ["positionClass" => "toast-top-right"]);
+
+            return redirect('admin/gestionarDocumentos')/*->with('mensaje','ok')*/;
+           // return Response::json($documento);
     }
 
     /**
@@ -85,7 +84,10 @@ class DocumentoController extends Controller
      */
     public function edit(Documento $documento)
     {
-        //
+        $where = array('id' => $id);
+        $documento  = Documento::where($where)->first();
+ 
+       // return Response::json($documento);
     }
 
     /**
@@ -108,6 +110,14 @@ class DocumentoController extends Controller
      */
     public function destroy(Documento $documento)
     {
-        //
+        $documento = Documento::where('id',$id)->delete();
+   
+        //return Response::json($documento);
+    }
+
+    public function descargar($id)
+    {
+        $documento = Documento::find($id);
+        return response()->download($documento->ruta);
     }
 }

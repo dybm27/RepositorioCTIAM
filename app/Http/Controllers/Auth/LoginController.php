@@ -25,7 +25,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/admin/gestionarDocumentos';//ruta a mostrar despues de loguear
 
     /**
      * Create a new controller instance.
@@ -36,4 +36,10 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
     }
+    
+    public function username()//si va a cambiar el username a correo, codigo, cedula
+    {
+        return 'codigo';
+    }
+    
 }

@@ -1,7 +1,7 @@
 @extends("theme.$theme.layout")
 
 @section('titulo')
-    Documentos
+    AudioVisuales
 @endsection
 
 @section('titulo1')
@@ -16,16 +16,16 @@
                 <!-- general form elements -->
                 <div class="box box-primary">
                     <div class="box-header with-border">
-                        <h3 class="box-title">Agregar Documento</h3>
+                        <h3 class="box-title">Agregar AudioVisual</h3>
                     </div>
                     <!-- /.box-header -->
                     <!-- form start -->
-                <form  method="POST" action="{{route('agregar_documento')}}" enctype="multipart/form-data">
+                <form  method="POST" action="{{route('agregar_audiovisual')}}" enctype="multipart/form-data">
                         @csrf
                         <div class="box-body">
                             <div class="form-group">
-                                <label for="exampleInputFile">Nuevo Documento</label>
-                                <input type="file" id="exampleInputFile" name="documento">
+                                <label for="exampleInputFile">Nuevo AudioVisual</label>
+                                <input type="file" id="exampleInputFile" name="audiovisual">
                             </div>
                         </div>
                         <!-- textarea -->

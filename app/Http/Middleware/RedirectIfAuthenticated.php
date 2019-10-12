@@ -18,7 +18,7 @@ class RedirectIfAuthenticated
     public function handle($request, Closure $next, $guard = null)
     {
         if (Auth::guard($guard)->check()) {
-            return redirect('/home');
+            return redirect('/admin/gestionarDocumentos');//para cuando ingresa en la url login ya estando logueado
         }
 
         return $next($request);

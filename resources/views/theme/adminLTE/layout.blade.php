@@ -19,6 +19,8 @@
     <!-- AdminLTE Skins. Choose a skin from the css/skins
         folder instead of downloading all of them to reduce the load. -->
     <link rel="stylesheet" href="{{asset("assets/$theme/dist/css/skins/_all-skins.min.css")}}">
+    <link rel="stylesheet" href="http://cdn.bootcss.com/toastr.js/latest/css/toastr.min.css">
+    <link rel="stylesheet" href="//cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -63,10 +65,6 @@
         @include("theme/$theme/footer")
       <!-- fin footer-->
 
-      <!-- aside Settings -->
-        @include("theme/$theme/asidesettings")
-      <!-- fin aside Settings -->
-
       <!-- /.control-sidebar -->
     </div>
     <!-- ./wrapper -->
@@ -92,6 +90,20 @@
     <script src="{{asset("assets/$theme/dist/js/pages/dashboard2.js")}}"></script>
     <!-- AdminLTE for demo purposes -->
     <script src="{{asset("assets/$theme/dist/js/demo.js")}}"></script>
+    <script src="http://cdn.bootcss.com/toastr.js/latest/js/toastr.min.js"></script>
+    {!! Toastr::message() !!}
+    <script src="//cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+    <script>
+      $(document).ready( function () {
+          $('#tabla').DataTable({
+            "language": {
+                  "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
+              },
+             // "lengthMenu":    [2,4,6,8,10]
+          });
+      } );
+    
+    </script>
     @yield('script')
   </body>
 </html>
