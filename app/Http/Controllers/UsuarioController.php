@@ -41,14 +41,11 @@ class UsuarioController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(ValidacionUsuario $request)
-    {
-
-        $tipousuario = TipoUsuario::where("nombre","=",$request['tipousuario'])->get();
-
+    {  
         User::create([
             'name' => $request['nombre'],
             'email' => $request['email'],
-            'tipouser_id' => $tipousuario[0]->id,
+            'tipousuario_id' => $request['tipousuario'],
             'password' => Hash::make($request['pass'])
             ]);
 
@@ -66,7 +63,7 @@ class UsuarioController extends Controller
      */
     public function show(Usuario $usuario)
     {
-        //
+
     }
 
     /**
@@ -75,9 +72,11 @@ class UsuarioController extends Controller
      * @param  \RepoCTIAM\Usuario  $usuario
      * @return \Illuminate\Http\Response
      */
-    public function edit(Usuario $usuario)
-    {
-        //
+    public function edit($id)
+    {   
+        $tiposusuarios = TipoUsuario::orderBy('id')->get();
+        $usuario = User::find($id);
+        return view('theme.usuarios.editar',compact('tiposusuarios','usuario'));
     }
 
     /**
@@ -87,9 +86,28 @@ class UsuarioController extends Controller
      * @param  \RepoCTIAM\Usuario  $usuario
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Usuario $usuario)
+    public function update(ValidacionUsuario $request, $id)
     {
-        //
+       
+        $user= User::find($id);
+        if(empty ($request['pass'])){
+            $pass=$user->password;
+        }else{
+            $pass=Hash::make($request['pass']);
+        }
+        $input = [
+            'name' => $request['nombre'],
+            'email' => $request['email'],
+            'tipousuario_id' => $request['tipousuario'],
+            'password' => $pass
+        ];
+       
+        $user->update($input);
+
+        Toastr::success('Actualizacion Exitosa', 'Excelente!!!', 
+            ["positionClass" => "toast-bottom-right"]);
+
+        return redirect('admin/gestionarUsuarios');
     }
 
     /**
@@ -98,8 +116,8 @@ class UsuarioController extends Controller
      * @param  \RepoCTIAM\Usuario  $usuario
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Usuario $usuario)
+    public function destroy($id)
     {
-        //
+        User::where('id',$id)->delete();
     }
 }

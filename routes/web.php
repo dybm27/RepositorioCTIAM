@@ -38,6 +38,9 @@ Route::group(['prefix' => '/admin'/*,'middleware'=>'auth'*/], function () {
     Route::get('/gestionarUsuarios','UsuarioController@index')->name('listar_usuarios');
     Route::get('/gestionarUsuarios/agregar','UsuarioController@create')->name('formulario_agregar_usuario');
     Route::post('/gestionarUsuarios/agregar','UsuarioController@store')->name('agregar_usuario');
+    Route::get('/gestionarUsuarios/editar/{id}','UsuarioController@edit')->name('formulario_editar_usuario');
+    Route::post('/gestionarUsuarios/editar/{id}','UsuarioController@update')->name('editar_usuario');
+    Route::get('/gestionarUsuarios/eliminar/{id}','UsuarioController@destroy')->name('eliminar_usuario');
     
 });
 

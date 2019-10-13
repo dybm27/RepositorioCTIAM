@@ -33,13 +33,14 @@
                                     <td>{{$usuario->name}}</td>
                                     <td>{{$usuario->email}}</td>
                                     <td>{{$usuario->tipousuario->nombre}}</td>
-                                    <td></td>
+                                    <td><button class="btn btn-warning" onclick="location.href='{{route('formulario_editar_usuario',$usuario->id)}}'"><span class="fa fa-pencil"></span></button>
+                                        <button class="btn btn-danger" onclick="location.href='{{route('eliminar_usuario',$usuario->id)}}'"><span class="fa fa-trash"></span></button></td>
                                 </tr>  
                             @endforeach                          
                         </tbody>
                     </table>
                     <div class="box-footer">
-                        <button  onclick="location.href='{{route('formulario_agregar_usuario')}}'" class="btn btn-primary">Agregar Nuevo Documento</button>
+                        <button  onclick="location.href='{{route('formulario_agregar_usuario')}}'" class="btn btn-primary">Agregar Nuevo Usuario</button>
                     </div>
                 </div>
             </div>

@@ -23,10 +23,18 @@ class ValidacionUsuario extends FormRequest
      */
     public function rules()
     {
-        return [
-            'nombre' => 'required',
-             'email' => ['required','unique:users,email'],
-            'pass' => 'required'
-        ];
+        if($this->route('id')){
+            return [
+                'nombre' => 'required',
+                'pass' => ' nullable|min:6'
+            ];
+        }else{
+            return [
+                'nombre' => 'required',
+                'email' => 'required|unique:users,email',
+                'pass' => 'required|min:6'
+            ];
+        }
+  
     }
 }

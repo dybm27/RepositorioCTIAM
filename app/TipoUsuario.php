@@ -14,10 +14,8 @@ class TipoUsuario extends Model
         'nombre'
     ];
 
-    protected $guarded=['id'];
-
     public function users()
     {
-        return $this->hasMany('RepoCTIAM\User','tipouser_id','id');
+        return $this->hasMany(User::class);
     }
 }

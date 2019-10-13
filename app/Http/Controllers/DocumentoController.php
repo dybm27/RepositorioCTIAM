@@ -82,7 +82,7 @@ class DocumentoController extends Controller
      * @param  \RepoCTIAM\Documento  $documento
      * @return \Illuminate\Http\Response
      */
-    public function edit(Documento $documento)
+    public function edit($id)
     {
         $where = array('id' => $id);
         $documento  = Documento::where($where)->first();
@@ -108,7 +108,7 @@ class DocumentoController extends Controller
      * @param  \RepoCTIAM\Documento  $documento
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Documento $documento)
+    public function destroy($id)
     {
         $documento = Documento::where('id',$id)->delete();
    

@@ -17,5 +17,4 @@ class Documento extends Model
         'ruta'
     ];
 
-    protected $guarded=['id'];
 }

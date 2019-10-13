@@ -16,6 +16,4 @@ class AudioVisual extends Model
         'extension',
         'ruta'
     ];
-
-    protected $guarded=['id'];
 }
