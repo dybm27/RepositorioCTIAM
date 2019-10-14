@@ -36,6 +36,8 @@
                         <!-- /.box-body -->       
                         <div class="box-footer">
                             <button type="submit" class="btn btn-primary">Agregar</button>
+                            <button type="button" class="btn btn-primary pull-right" onclick="location.href='{{route('listar_documentos')}}'">
+                                    <i class="fa fa-arrow-circle-o-left"></i></button>
                         </div>
                     </form>
                 </div>

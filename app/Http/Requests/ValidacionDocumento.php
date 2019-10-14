@@ -23,9 +23,16 @@ class ValidacionDocumento extends FormRequest
      */
     public function rules()
     {
-        return [
-            'documento' => 'required|mimes:docx,doc,pdf,pptx,xlsx',
-            'descripcion' => 'required'
-        ];
+        if($this->route('id')){
+            return [
+                'nombre' => 'required|unique:documentos,nombre',
+                'descripcion' => 'required'
+            ];
+        }else{
+            return [
+                'documento' => 'required|mimes:docx,doc,pdf,pptx,xlsx',
+                'descripcion' => 'required'
+            ];
+        }
     }
 }

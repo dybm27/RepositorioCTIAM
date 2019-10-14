@@ -54,6 +54,8 @@
                         <!-- /.box-body -->       
                         <div class="box-footer">
                             <button type="submit" class="btn btn-primary">Actualizar</button>
+                            <button type="button" class="btn btn-primary pull-right" onclick="location.href='{{route('listar_usuarios')}}'">
+                                <i class="fa fa-arrow-circle-o-left"></i></button>
                         </div>
                     </form>
                 </div>

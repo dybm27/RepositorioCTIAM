@@ -23,9 +23,16 @@ class ValidacionAudioVisual extends FormRequest
      */
     public function rules()
     {
-        return [
+        if($this->route('id')){
+            return [
+                'nombre' => 'required|unique:audiovisual,nombre', 
+                'descripcion' => 'required'
+            ];
+        }else{
+            return [
             'audiovisual' => 'required', //|mimes:mp3,mp4
-            'descripcion' => 'required'
-        ];
+            'descripcion' => 'required'];
+        }
+        
     }
 }

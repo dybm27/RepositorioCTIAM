@@ -2,6 +2,7 @@
 
 namespace RepoCTIAM\Http\Controllers;
 
+use File;
 use RepoCTIAM\AudioVisual;
 use Illuminate\Http\Request;
 use RepoCTIAM\Http\Requests\ValidacionAudioVisual;
@@ -38,8 +39,9 @@ class AudioVisualController extends Controller
      */
     public function store(ValidacionAudioVisual $request)
     {
+        //cuando se arregele la validacion descomentarear codigo
         //obtenemos el campo file definido en el formulario
-        $file = $request->file('audiovisual');
+        /* $file = $request->file('audiovisual');
 
         //obtenemos el nombre del archivo
         $fileName = $file->getClientOriginalName();
@@ -65,7 +67,37 @@ class AudioVisualController extends Controller
                 ["positionClass" => "toast-top-right"]);
         
                 //return redirect()->back();
-        return redirect('admin/gestionarAudioVisuales')/*->with('mensaje','ok')*/;
+        return redirect('admin/gestionarAudioVisuales'); /*->with('mensaje','ok')*/
+
+        $file = $request->file('audiovisual');
+
+        //obtenemos el nombre del archivo
+        $fileName = $file->getClientOriginalName();
+        $nombre=explode('.',$fileName)[0];
+        $extension = explode('.',$fileName)[1];
+     
+        if(strcmp($extension,'mp3')==0||strcmp($extension,'mp4')==0){
+            $file->move(storage_path().'/audiovisuales',$fileName);
+            $path='../storage/audiovisuales/'.$fileName;
+
+            AudioVisual::create([
+                'nombre' => $nombre,
+                'descripcion' => $request['descripcion'],
+                'extension' => $extension,
+                'ruta' => $path
+                ]);
+            
+            Toastr::success('Registro exitoso','Excelente!!!', 
+                    ["positionClass" => "toast-top-right"]);
+                    
+            return redirect('admin/gestionarAudioVisuales');
+        }else{
+            Toastr::error('Tipo de archivo erroneo, solo se acepta mp3 y mp4','Error!!!', 
+                ["positionClass" => "toast-top-right"]);
+        
+            return redirect()->back();
+        }        
+        
     }
     
 
@@ -86,9 +118,10 @@ class AudioVisualController extends Controller
      * @param  \RepoCTIAM\AudioVisual  $audioVisual
      * @return \Illuminate\Http\Response
      */
-    public function edit(AudioVisual $audioVisual)
+    public function edit($id)
     {
-        //
+        $audiovisual  = AudioVisual::find($id);
+        return view('theme.audiovisuales.editar',compact('audiovisual'));
     }
 
     /**
@@ -98,9 +131,27 @@ class AudioVisualController extends Controller
      * @param  \RepoCTIAM\AudioVisual  $audioVisual
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, AudioVisual $audioVisual)
+    public function update(ValidacionAudioVisual $request, $id)
     {
-        //
+        $audioVisual  = AudioVisual::find($id);
+
+        File::move(storage_path('audiovisuales/'.$audioVisual->nombre.'.'.$audioVisual->extension),
+             storage_path('audiovisuales/'.$request['nombre'].'.'.$audioVisual->extension));
+        
+        $ruta='../storage/audiovisuales/'.$request['nombre'].'.'.$audioVisual->extension;
+
+        $input = [
+            'nombre' => $request['nombre'],
+            'descripcion' => $request['descripcion'],
+            'ruta' => $ruta
+        ];
+       
+        $audioVisual->update($input);
+
+        Toastr::success('Actualizacion Exitosa', 'Excelente!!!', 
+            ["positionClass" => "toast-top-right"]);
+
+        return redirect('admin/gestionarAudioVisuales');
     }
 
     /**
@@ -109,9 +160,16 @@ class AudioVisualController extends Controller
      * @param  \RepoCTIAM\AudioVisual  $audioVisual
      * @return \Illuminate\Http\Response
      */
-    public function destroy(AudioVisual $audioVisual)
+    public function destroy($id)
     {
-        //
+        $audioVisual = AudioVisual::find($id);
+        File::delete($audioVisual->ruta);
+        $audioVisual->delete();
+
+        Toastr::success('Eliminacion Exitosa', 'Excelente!!!', 
+            ["positionClass" => "toast-top-right"]);
+
+        return redirect('admin/gestionarAudioVisuales');
     }
 
     public function descargar($id)

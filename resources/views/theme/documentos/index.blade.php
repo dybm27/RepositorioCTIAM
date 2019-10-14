@@ -33,7 +33,8 @@
                                     <td>{{$documento->nombre}}</td>
                                     <td>{{$documento->descripcion}}</td>
                                     <td><a href="gestionarDocumentos/descargar/{{$documento->id}}"><img src={{asset("iconos/$documento->extension.png")}}></a></td>
-                                    <td></td>
+                                    <td><button class="btn btn-warning" onclick="location.href='{{route('formulario_editar_documento',$documento->id)}}'"><span class="fa fa-pencil"></span></button>
+                                        <button class="btn btn-danger" onclick="location.href='{{route('eliminar_documento',$documento->id)}}'"><span class="fa fa-trash"></span></button></td>
                                 </tr>  
                             @endforeach                          
                         </tbody>

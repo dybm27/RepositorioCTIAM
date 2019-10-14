@@ -4,6 +4,8 @@ namespace RepoCTIAM\Http\Controllers;
 
 use RepoCTIAM\Documento;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 use RepoCTIAM\Http\Requests\ValidacionDocumento;
 use Toastr;
 
@@ -50,7 +52,7 @@ class DocumentoController extends Controller
             $file->move(storage_path().'/documentos',$fileName);
             $ruta='../storage/documentos/'.$fileName;
 
-            $documento = Documento::create([
+            Documento::create([
                 'nombre' => $nombre,
                 'descripcion' => $request['descripcion'],
                 'extension' => $extension,
@@ -84,9 +86,8 @@ class DocumentoController extends Controller
      */
     public function edit($id)
     {
-        $where = array('id' => $id);
-        $documento  = Documento::where($where)->first();
- 
+        $documento  = Documento::find($id);
+        return view('theme.documentos.editar',compact('documento'));
        // return Response::json($documento);
     }
 
@@ -97,9 +98,27 @@ class DocumentoController extends Controller
      * @param  \RepoCTIAM\Documento  $documento
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Documento $documento)
+    public function update(ValidacionDocumento $request,$id)
     {
-        //
+        $documento  = Documento::find($id);
+
+        File::move(storage_path('documentos/'.$documento->nombre.'.'.$documento->extension),
+             storage_path('documentos/'.$request['nombre'].'.'.$documento->extension));
+        
+        $ruta='../storage/documentos/'.$request['nombre'].'.'.$documento->extension;
+
+        $input = [
+            'nombre' => $request['nombre'],
+            'descripcion' => $request['descripcion'],
+            'ruta' => $ruta
+        ];
+       
+        $documento->update($input);
+
+        Toastr::success('Actualizacion Exitosa', 'Excelente!!!', 
+            ["positionClass" => "toast-top-right"]);
+
+        return redirect('admin/gestionarDocumentos');
     }
 
     /**
@@ -110,7 +129,14 @@ class DocumentoController extends Controller
      */
     public function destroy($id)
     {
-        $documento = Documento::where('id',$id)->delete();
+        $documento = Documento::find($id);
+        File::delete($documento->ruta);
+        $documento->delete();
+
+        Toastr::success('Eliminacion Exitosa', 'Excelente!!!', 
+            ["positionClass" => "toast-top-right"]);
+
+        return redirect('admin/gestionarDocumentos');
    
         //return Response::json($documento);
     }

@@ -103,9 +103,10 @@ class UsuarioController extends Controller
         ];
        
         $user->update($input);
-
+        // tambien puede ser--- pero habria que encriptar la pass
+        //User::find($id)->update(array_filter($request->all()));
         Toastr::success('Actualizacion Exitosa', 'Excelente!!!', 
-            ["positionClass" => "toast-bottom-right"]);
+            ["positionClass" => "toast-top-right"]);
 
         return redirect('admin/gestionarUsuarios');
     }
@@ -119,5 +120,10 @@ class UsuarioController extends Controller
     public function destroy($id)
     {
         User::where('id',$id)->delete();
+
+        Toastr::success('Eliminacion Exitosa', 'Excelente!!!', 
+            ["positionClass" => "toast-top-right"]);
+            
+        return redirect('admin/gestionarUsuarios');
     }
 }
