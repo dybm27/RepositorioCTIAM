@@ -26,8 +26,7 @@
                             <div class="form-group">
                                 <label for="exampleInputFile">Nombre</label>
                                 <input type="text" class="form-control" id="exampleInputFile" name="nombre" placeholder="nombre"
-                                    {{$nombre=explode('.',$documento->nombre)[0]}}
-                                    value="{{$nombre}}">
+                                   value="{{$nombre}}">
                             </div>
                         <!-- textarea -->
                             <div class="form-group">

@@ -25,7 +25,7 @@ class ValidacionDocumento extends FormRequest
     {
         if($this->route('id')){
             return [
-                'nombre' => 'required|unique:documentos,nombre',
+                'nombre' => 'required',
                 'descripcion' => 'required'
             ];
         }else{

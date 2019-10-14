@@ -42,28 +42,39 @@ class DocumentoController extends Controller
     {
            //obtenemos el campo file definido en el formulario
             $file = $request->file('documento');
-                
             //obtenemos el nombre del archivo
             $fileName = $file->getClientOriginalName();
-         
-            $nombre=explode('.',$fileName)[0];
-            $extension = explode('.',$fileName)[1];
             
-            $file->move(storage_path().'/documentos',$fileName);
-            $ruta='../storage/documentos/'.$fileName;
+            $documentoentrante= Documento::where('nombre',$fileName)->first();
 
-            Documento::create([
-                'nombre' => $nombre,
-                'descripcion' => $request['descripcion'],
-                'extension' => $extension,
-                'ruta' => $ruta
+            if (empty($documentoentrante)) {
+                $array= explode('.',$fileName);
+            
+                $extension=end($array);
+                
+                $file->move(storage_path().'/documentos',$fileName);
+                $ruta='../storage/documentos/'.$fileName;
+
+                Documento::create([
+                    'nombre' => $fileName,
+                    'descripcion' => $request['descripcion'],
+                    'extension' => $extension,
+                    'ruta' => $ruta
                 ]);
 
 
-                Toastr::success('Registro exitoso','Excelente!!!', 
-                ["positionClass" => "toast-top-right"]);
+                    Toastr::success('Registro exitoso','Excelente!!!', 
+                    ["positionClass" => "toast-top-right"]);
 
-            return redirect('admin/gestionarDocumentos')/*->with('mensaje','ok')*/;
+                return redirect('admin/gestionarDocumentos')/*->with('mensaje','ok')*/;
+            }else{
+                Toastr::error('El documento ya Existe...','Error!!!', 
+                    ["positionClass" => "toast-top-right"]);
+
+                    return redirect()->back();
+            }
+            
+           
            // return Response::json($documento);
     }
 
@@ -87,7 +98,9 @@ class DocumentoController extends Controller
     public function edit($id)
     {
         $documento  = Documento::find($id);
-        return view('theme.documentos.editar',compact('documento'));
+        $noms= explode('.',$documento->nombre,-1);
+        $nombre=implode(".", $noms);
+        return view('theme.documentos.editar',compact('documento','nombre'));
        // return Response::json($documento);
     }
 
@@ -101,24 +114,34 @@ class DocumentoController extends Controller
     public function update(ValidacionDocumento $request,$id)
     {
         $documento  = Documento::find($id);
+        $documentoentrante= Documento::where('nombre',$request['nombre'].'.'.$documento->extension)->first();
 
-        File::move(storage_path('documentos/'.$documento->nombre.'.'.$documento->extension),
+        if (empty($documentoentrante)||$documentoentrante->id==$documento->id) {
+
+            File::move(storage_path('documentos/'.$documento->nombre),
              storage_path('documentos/'.$request['nombre'].'.'.$documento->extension));
         
-        $ruta='../storage/documentos/'.$request['nombre'].'.'.$documento->extension;
+            $ruta='../storage/documentos/'.$request['nombre'].'.'.$documento->extension;
 
-        $input = [
-            'nombre' => $request['nombre'],
-            'descripcion' => $request['descripcion'],
-            'ruta' => $ruta
-        ];
-       
-        $documento->update($input);
+            $input = [
+                'nombre' => $request['nombre'].'.'.$documento->extension,
+                'descripcion' => $request['descripcion'],
+                'ruta' => $ruta
+            ];
+        
+            $documento->update($input);
 
-        Toastr::success('Actualizacion Exitosa', 'Excelente!!!', 
-            ["positionClass" => "toast-top-right"]);
+            Toastr::success('Actualizacion Exitosa', 'Excelente!!!', 
+                ["positionClass" => "toast-top-right"]);
 
-        return redirect('admin/gestionarDocumentos');
+            return redirect('admin/gestionarDocumentos');
+        }else{
+            Toastr::error('Ya existe un documento con ese nombre...','Error!!!', 
+                    ["positionClass" => "toast-top-right"]);
+
+                    return redirect()->back();
+        }
+        
     }
 
     /**
