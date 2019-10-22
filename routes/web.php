@@ -16,6 +16,9 @@
 });*/
 
 // ------ RUTA LOGIN ------
+
+use Illuminate\Support\Facades\Route;
+
 Route::get('/login', 'LoginController@index')->name('login');
 
 // ---------- RUTAS DE ADMIN ------
@@ -48,6 +51,13 @@ Route::group(['prefix' => '/admin'/*,'middleware'=>'auth'*/], function () {
     Route::post('/gestionarUsuarios/editar/{id}','UsuarioController@update')->name('editar_usuario');
     Route::get('/gestionarUsuarios/eliminar/{id}','UsuarioController@destroy')->name('eliminar_usuario');
     
+    // --------- USUARIO MODAL ----------
+    Route::get('/gestionarUsuariosModal','UsuarioModalController@index')->name('listar_usuariosM');
+    Route::post('/gestionarUsuariosModal/agregar','UsuarioModalController@store')->name('agregar_usuarioM');
+    Route::get('/gestionarUsuariosModal/editar/{id}','UsuarioModalController@edit')->name('formulario_editar_usuarioM');
+    Route::put('/gestionarUsuariosModal/editar/{id}','UsuarioModalController@update')->name('editar_usuarioM');
+    Route::get('/gestionarUsuariosModal/eliminar/{id}','UsuarioModalController@destroy')->name('eliminar_usuarioM');
+
 });
 
 //Auth::routes();

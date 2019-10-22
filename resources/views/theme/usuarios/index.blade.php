@@ -14,9 +14,10 @@
             <div class="box">
                 <div class="box-header">
                     <h3 class="box-title">Usuarios</h3>
+                    <button  onclick="location.href='{{route('formulario_agregar_usuario')}}'" class="btn btn-primary pull-right">Agregar Nuevo Usuario</button>
                 </div>
                 <div class="box-body">
-                    <table id="tabla" class="table table-bordered table-striped">
+                    <table id="tablaUsuarios" class="table table-bordered table-striped">
                         <thead>
                             <tr>
                                 <th>Id</th>
@@ -40,12 +41,22 @@
                         </tbody>
                     </table>
                     <div class="box-footer">
-                        <button  onclick="location.href='{{route('formulario_agregar_usuario')}}'" class="btn btn-primary">Agregar Nuevo Usuario</button>
+                        
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-    
+@endsection
+@section('script')
+    <script>
+        $(document).ready( function () {
+            $('#tablaUsuarios').DataTable({
+            "language": {
+                    "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
+                },
+            // "lengthMenu":    [2,4,6,8,10]
+            });
+        });
+    </script>
 @endsection

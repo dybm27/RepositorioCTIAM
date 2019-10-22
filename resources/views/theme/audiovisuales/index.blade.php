@@ -14,9 +14,11 @@
             <div class="box">
                 <div class="box-header">
                     <h3 class="box-title">AudioVisuales</h3>
+                    <button  onclick="location.href='{{route('formulario_agregar_audiovisual')}}'"
+                     class="btn btn-primary pull-right">Agregar Nuevo AudioVisual</button>
                 </div>
                 <div class="box-body">
-                    <table id="tabla" class="table table-bordered table-striped">
+                    <table id="tablaAudioVisuales" class="table table-bordered table-striped">
                         <thead>
                             <tr>
                                 <th>Id</th>
@@ -40,13 +42,22 @@
                         </tbody>
                     </table>
                     <div class="box-footer">
-                    <button  onclick="location.href='{{route('formulario_agregar_audiovisual')}}'"
-                     class="btn btn-primary">Agregar Nuevo AudioVisual</button>
+                    
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-    
+@endsection
+@section('script')
+    <script>
+        $(document).ready( function () {
+            $('#tablaAudioVisuales').DataTable({
+            "language": {
+                    "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
+                },
+            // "lengthMenu":    [2,4,6,8,10]
+            });
+        });
+    </script>
 @endsection

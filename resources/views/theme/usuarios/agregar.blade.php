@@ -10,8 +10,8 @@
 
 @section('contenido')
     <div class="container">
-        <div class="row">
-            <div class="col-md-6">
+        <div class="row col-centered ">
+            <div class="col-md-6 ">
                 @include("theme.includes.error")
                 <!-- general form elements -->
                 <div class="box box-primary">
@@ -20,7 +20,7 @@
                     </div>
                     <!-- /.box-header -->
                     <!-- form start -->
-                <form  method="POST" action="{{route('agregar_usuario')}}">
+                    <form  method="POST" action="{{route('agregar_usuario')}}">
                         @csrf
                         <div class="box-body">
                             <div class="form-group">

@@ -2,6 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
+    <meta name="_token" content="{!! csrf_token() !!}" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>@yield("titulo","Inicio") | ReporsitorioCTIAM</title>
     <!-- Tell the browser to be responsive to screen width -->
@@ -16,13 +17,13 @@
     <link rel="stylesheet" href="{{asset("assets/$theme/bower_components/jvectormap/jquery-jvectormap.css")}}">
     <!-- Theme style -->
     <link rel="stylesheet" href="{{asset("assets/$theme/dist/css/AdminLTE.min.css")}}">
-    <!-- css Dumar -->
-    <link rel="stylesheet" href="{{asset("css/dumar.css")}}">
     <!-- AdminLTE Skins. Choose a skin from the css/skins
         folder instead of downloading all of them to reduce the load. -->
     <link rel="stylesheet" href="{{asset("assets/$theme/dist/css/skins/_all-skins.min.css")}}">
     <link rel="stylesheet" href="http://cdn.bootcss.com/toastr.js/latest/css/toastr.min.css">
     <link rel="stylesheet" href="//cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
+    <!-- css Dumar -->
+    <link rel="stylesheet" href="{{asset("css/dumar.css")}}">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -93,21 +94,11 @@
     <!-- AdminLTE for demo purposes -->
     <script src="{{asset("assets/$theme/dist/js/demo.js")}}"></script>
     <!-- js Dumar -->
-    <script src="{{asset("js/dumar.js")}}"></script>
     <script src="http://cdn.bootcss.com/toastr.js/latest/js/toastr.min.js"></script>
     {!! Toastr::message() !!}
     <script src="//cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
-    <script>
-      $(document).ready( function () {
-          $('#tabla').DataTable({
-            "language": {
-                  "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
-              },
-             // "lengthMenu":    [2,4,6,8,10]
-          });
-      } );
-    
-    </script>
+    <script src="{{asset("js/dumar.js")}}"></script>
+    <script src="{{asset("js/usuariosAjax.js")}}"></script>
     @yield('script')
   </body>
 </html>
