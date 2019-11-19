@@ -18,9 +18,4 @@ class TipoUsuario extends Model
     {
         return $this->hasMany(User::class);
     }
-
-    public function usersModal()
-    {
-        return $this->hasMany(UsuarioModal::class);
-    }
 }

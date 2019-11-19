@@ -14,7 +14,7 @@
             <div class="box">
                 <div class="box-header">
                     <h3 class="box-title">Usuarios</h3>
-                    <button  onclick="location.href='{{route('formulario_agregar_usuario')}}'" class="btn btn-primary pull-right">Agregar Nuevo Usuario</button>
+                    <button class="btn btn-primary pull-right" id="btnAbrirModalAgregarU" >Agregar Nuevo Usuario</button>
                 </div>
                 <div class="box-body">
                     <table id="tablaUsuarios" class="table table-bordered table-striped">
@@ -27,18 +27,6 @@
                                 <th>Accion</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            @foreach ($usuarios as $usuario)
-                                <tr>
-                                    <td>{{$usuario->id}}</td>
-                                    <td>{{$usuario->name}}</td>
-                                    <td>{{$usuario->email}}</td>
-                                    <td>{{$usuario->tipousuario->nombre}}</td>
-                                    <td><button class="btn btn-warning" onclick="location.href='{{route('formulario_editar_usuario',$usuario->id)}}'"><span class="fa fa-pencil"></span></button>
-                                        <button class="btn btn-danger" onclick="location.href='{{route('eliminar_usuario',$usuario->id)}}'"><span class="fa fa-trash"></span></button></td>
-                                </tr>  
-                            @endforeach                          
-                        </tbody>
                     </table>
                     <div class="box-footer">
                         
@@ -47,16 +35,32 @@
             </div>
         </div>
     </div>
+    <input id="url" type="hidden" value="{{ \Request::url() }}">
+    @include('theme.usuarios.modalAyE')
+    @include('theme.usuarios.modalConfirmacion')
 @endsection
 @section('script')
     <script>
         $(document).ready( function () {
             $('#tablaUsuarios').DataTable({
-            "language": {
+                "processing": true,
+                "serverSide": true,
+                "responsive": true,
+                "autoWidth": false,
+                "ajax": "{{url('api/users')}}",
+                "columns": [
+                    {data: 'id'},
+                    {data: 'name'},
+                    {data: 'email'},
+                    {data: 'tipousuario'},
+                    {data: 'btns'},
+                ],
+                "language": {
                     "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
-                },
+                }
             // "lengthMenu":    [2,4,6,8,10]
             });
         });
     </script>
+    <script src="{{asset("js/usuariosAjax.js")}}"></script>
 @endsection

@@ -34,9 +34,9 @@
           <ul class="treeview-menu">
             <li><a href="{{route('listar_documentos')}}"><i class="fa fa-circle-o"></i> Documentos</a></li>
             <li><a href="{{route('listar_audiovisuales')}}"><i class="fa fa-circle-o"></i> Piezas Audiovisuales</a></li>
-            <li><a href="#"><i class="fa fa-circle-o"></i> Revistas</a></li>
-            <li><a href="#"><i class="fa fa-circle-o"></i> Libros</a></li>
-            <li><a href="#"><i class="fa fa-circle-o"></i> Material de Capacitacion</a></li>
+            <li><a href="{{route('listar_revistas')}}"><i class="fa fa-circle-o"></i> Revistas</a></li>
+            <li><a href="{{route('listar_libros')}}"><i class="fa fa-circle-o"></i> Libros</a></li>
+            <li><a href="{{route('listar_capacitaciones')}}"><i class="fa fa-circle-o"></i> Material de Capacitacion</a></li>
           </ul>
         </li>
         <li>
@@ -54,6 +54,14 @@
             </span>
           </a>
         </li>   
+        <li>
+          <a href="#">
+            <i class="fa fa-trash"></i> 
+            <span>Papelera</span>
+            <span class="pull-right-container">
+            </span>
+          </a>
+        </li>
       </ul>
     </section>
     <!-- /.sidebar -->

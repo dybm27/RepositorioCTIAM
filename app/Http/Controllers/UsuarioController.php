@@ -6,9 +6,10 @@ use RepoCTIAM\User;
 use RepoCTIAM\TipoUsuario;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Response;
 use RepoCTIAM\Http\Requests\ValidacionUsuario;
 use Toastr;
-
+use Validator;
 
 class UsuarioController extends Controller
 {
@@ -19,8 +20,8 @@ class UsuarioController extends Controller
      */
     public function index()
     {
-        $usuarios = User::orderBy('id')->get();
-        return view('theme.usuarios.index',compact('usuarios'));
+        $tiposusuarios = TipoUsuario::orderBy('id')->get();
+        return view('theme.usuarios.index',compact('tiposusuarios'));
     }
 
     /**
@@ -30,8 +31,8 @@ class UsuarioController extends Controller
      */
     public function create()
     {
-        $tiposusuarios = TipoUsuario::orderBy('id')->get();
-        return view('theme.usuarios.agregar',compact('tiposusuarios'));
+       /* $tiposusuarios = TipoUsuario::orderBy('id')->get();
+        return view('theme.usuarios.agregar',compact('tiposusuarios'));*/
     }
 
     /**
@@ -40,19 +41,26 @@ class UsuarioController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(ValidacionUsuario $request)
-    {  
-        User::create([
+
+    public function store(Request $request)
+    {
+        $rules = array(
+            'nombre' => 'required',
+            'email' => 'required|unique:users,email',
+            'pass' => 'required|min:6'
+        );
+        $error=Validator::make($request->all(),$rules);
+        if($error->fails()){
+            return response()->json(['errors' => $error->errors()->all()]);
+        }
+        $user= User::create([
             'name' => $request['nombre'],
             'email' => $request['email'],
             'tipousuario_id' => $request['tipousuario'],
             'password' => Hash::make($request['pass'])
             ]);
 
-        Toastr::success('Registro exitoso','Excelente!!!', 
-            ["positionClass" => "toast-top-right"]);
-
-        return redirect('admin/gestionarUsuarios');
+        return Response::json($user);
     }
 
     /**
@@ -72,11 +80,12 @@ class UsuarioController extends Controller
      * @param  \RepoCTIAM\Usuario  $usuario
      * @return \Illuminate\Http\Response
      */
+
+
     public function edit($id)
-    {   
-        $tiposusuarios = TipoUsuario::orderBy('id')->get();
-        $usuario = User::find($id);
-        return view('theme.usuarios.editar',compact('tiposusuarios','usuario'));
+    {
+        $usuario = User::find($id);  
+        return Response::json($usuario);
     }
 
     /**
@@ -86,9 +95,18 @@ class UsuarioController extends Controller
      * @param  \RepoCTIAM\Usuario  $usuario
      * @return \Illuminate\Http\Response
      */
-    public function update(ValidacionUsuario $request, $id)
-    {
-       
+
+    public function update(Request $request,$id)
+    {   
+        $rules = array(
+            'nombre' => 'required',
+            'pass' => ' nullable|min:6'
+        );
+        $error=Validator::make($request->all(),$rules);
+        if($error->fails()){
+            return response()->json(['errors' => $error->errors()->all()]);
+        }
+
         $user= User::find($id);
         if(empty ($request['pass'])){
             $pass=$user->password;
@@ -103,12 +121,8 @@ class UsuarioController extends Controller
         ];
        
         $user->update($input);
-        // tambien puede ser--- pero habria que encriptar la pass
-        //User::find($id)->update(array_filter($request->all()));
-        Toastr::success('Actualizacion Exitosa', 'Excelente!!!', 
-            ["positionClass" => "toast-top-right"]);
 
-        return redirect('admin/gestionarUsuarios');
+        return Response::json($user);
     }
 
     /**
@@ -117,13 +131,10 @@ class UsuarioController extends Controller
      * @param  \RepoCTIAM\Usuario  $usuario
      * @return \Illuminate\Http\Response
      */
+
     public function destroy($id)
     {
-        User::where('id',$id)->delete();
-
-        Toastr::success('Eliminacion Exitosa', 'Excelente!!!', 
-            ["positionClass" => "toast-top-right"]);
-            
-        return redirect('admin/gestionarUsuarios');
+        $user=User::where('id',$id)->delete();
+        return Response::json($user);
     }
 }

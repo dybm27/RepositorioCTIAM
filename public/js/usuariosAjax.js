@@ -54,12 +54,12 @@ $(document).ready(function(){
                     $('#form_results').html(html);
                 }else{
                     $('#formUsuarios').trigger("reset");
-                    $('#tablaUsuariosModal').DataTable().ajax.reload();
+                    $('#tablaUsuarios').DataTable().ajax.reload();
                     if(type=='POST'){
                         toastr.success('Registro exitoso','Excelente!!!', 
                         {"positionClass": "toast-top-right"});
                     }else{
-                        toastr.success('Actualizacion exitoso','Excelente!!!', 
+                        toastr.success('Actualizacion exitosa','Excelente!!!', 
                         {"positionClass": "toast-top-right"});
                     }
                     cerrarModal('#modalUsuarios');
@@ -92,7 +92,6 @@ $(document).ready(function(){
             }
         })
     });
-
     var id;
     $(document).on('click','.eliminarU', function(){
         id=$(this).prop('id');
@@ -104,9 +103,9 @@ $(document).ready(function(){
             url: url+'/eliminar/'+id,
             success:function(data){
                 cerrarModal('#modalConfir');
-                toastr.success('Eliminacion exitoso','Excelente!!!', 
+                toastr.success('Eliminacion exitosa','Excelente!!!', 
                         {"positionClass": "toast-top-right"});
-                $('#tablaUsuariosModal').DataTable().ajax.reload();
+                $('#tablaUsuarios').DataTable().ajax.reload();
             }
         })
     });

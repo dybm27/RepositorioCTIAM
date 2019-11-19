@@ -30,8 +30,9 @@ class ValidacionAudioVisual extends FormRequest
             ];
         }else{
             return [
-            'audiovisual' => 'required', //|mimes:mp3,mp4
-            'descripcion' => 'required'];
+            'audiovisual' => 'required|mimes:mp3,mp4',
+            'descripcion' => 'required'
+        ];
         }
         
     }

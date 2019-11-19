@@ -5,6 +5,9 @@ namespace RepoCTIAM\Http\Controllers;
 use File;
 use RepoCTIAM\AudioVisual;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 use RepoCTIAM\Http\Requests\ValidacionAudioVisual;
 use Toastr;
 
@@ -17,8 +20,7 @@ class AudioVisualController extends Controller
      */
     public function index()
     {
-        $audiovisuales = AudioVisual::orderBy('id')->get();
-        return view('theme.audiovisuales.index',compact('audiovisuales'));
+        return view('theme.audiovisuales.index');
     }
 
     /**
@@ -28,7 +30,6 @@ class AudioVisualController extends Controller
      */
     public function create()
     {
-        return view('theme.audiovisuales.agregar');
     }
 
     /**
@@ -39,76 +40,45 @@ class AudioVisualController extends Controller
      */
     public function store(ValidacionAudioVisual $request)
     {
-        //cuando se arregele la validacion descomentarear codigo
+        $rules = array(
+            'audiovisual' => 'required|mimes:mp3,mp4',
+            'descripcion' => 'required'
+        );
+
+        $error=Validator::make($request->all(),$rules);
+        if($error->fails()){
+            return response()->json(['errors' => $error->errors()->all()]);
+        }
+
         //obtenemos el campo file definido en el formulario
-        /* $file = $request->file('audiovisual');
-
+        $file = $request->file('libro');
         //obtenemos el nombre del archivo
         $fileName = $file->getClientOriginalName();
-        $nombre=explode('.',$fileName)[0];
-        $extension = explode('.',$fileName)[1];
-     
-        if(strcmp($extension,'mp3')==0||strcmp($extension,'mp4')==0){
-        }else{
-            $nombre=explode('.',$fileName)[0].'.'.explode('.',$fileName)[1];
-            $extension = explode('.',$fileName)[2];
-        }        
-        $file->move(storage_path().'/audiovisuales',$fileName);
-        $path='../storage/audiovisuales/'.$fileName;
+    
+        $audiovisualentrante= AudioVisual::where('nombre',$fileName)->first();
+    
+        if (empty($audiovisualentrante)) {
+            $array= explode('.',$fileName);
+        
+            $extension=end($array);
 
-        AudioVisual::create([
-            'nombre' => $nombre,
-            'descripcion' => $request['descripcion'],
-            'extension' => $extension,
-            'ruta' => $path
+            Storage::disk('local')->put('/public/audiovisuales/'.$fileName,file_get_contents($file));
+            $ruta='/public/audiovisuales/'.$fileName;
+
+            $audiovisual=  AudioVisual::create([
+                'nombre' => $fileName,
+                'descripcion' => $request['descripcion'],
+                'estado' => $request['estado'],
+                'extension' => $extension,
+                'ruta' => $ruta
             ]);
-        
-        Toastr::success('Registro exitoso','Excelente!!!', 
-                ["positionClass" => "toast-top-right"]);
-        
-                //return redirect()->back();
-        return redirect('admin/gestionarAudioVisuales'); /*->with('mensaje','ok')*/
-
-        $file = $request->file('audiovisual');
-
-        //obtenemos el nombre del archivo
-        $fileName = $file->getClientOriginalName();
-
-        $array= explode('.',$fileName);
-        $extension=end($array);
-     
-        if(strcmp($extension,'mp3')==0||strcmp($extension,'mp4')==0){
-
-            $audiovisualentrante= AudioVisual::where('nombre',$fileName)->first();
-
-            if (empty($audiovisualentrante)) {
-                $file->move(storage_path().'/audiovisuales',$fileName);
-                $path='../storage/audiovisuales/'.$fileName;
-
-                AudioVisual::create([
-                    'nombre' => $fileName,
-                    'descripcion' => $request['descripcion'],
-                    'extension' => $extension,
-                    'ruta' => $path
-                    ]);
-                
-                Toastr::success('Registro exitoso','Excelente!!!', 
-                        ["positionClass" => "toast-top-right"]);
-                        
-                return redirect('admin/gestionarAudioVisuales');
-            }else{
-                Toastr::error('El archivo ya Existe...','Error!!!', 
-                    ["positionClass" => "toast-top-right"]);
-
-                    return redirect()->back();
-            }
-            
         }else{
-            Toastr::error('Tipo de archivo erroneo, solo se acepta mp3 y mp4','Error!!!', 
-                ["positionClass" => "toast-top-right"]);
-        
-            return redirect()->back();
-        }        
+            return response()->json(['errors' => 
+                        [0 =>'El Archivo Multimedia ya existe']
+                        ]);
+        }   
+       
+       return Response::json($audiovisual);
         
     }
     
@@ -134,8 +104,9 @@ class AudioVisualController extends Controller
     {
         $audiovisual  = AudioVisual::find($id);
         $noms= explode('.',$audiovisual->nombre,-1);
-        $nombre=implode(".", $noms);
-        return view('theme.audiovisuales.editar',compact('audiovisual','nombre'));
+        $nombre=implode('.', $noms);         
+        $audiovisual=array_add($audiovisual,'nomsinext',$nombre);
+        return Response::json($audiovisual);
     }
 
     /**
@@ -145,37 +116,52 @@ class AudioVisualController extends Controller
      * @param  \RepoCTIAM\AudioVisual  $audioVisual
      * @return \Illuminate\Http\Response
      */
-    public function update(ValidacionAudioVisual $request, $id)
+    public function update(Request $request, $id)
     {
-        $audioVisual  = AudioVisual::find($id);
-        $audiovisualentrante= AudioVisual::where('nombre',$request['nombre'].'.'.$audioVisual->extension)->first();
+        $rules = array(
+            'nombre' => 'required',
+            'descripcion' => 'required'
+        );
+        $error=Validator::make($request->all(),$rules);
+        if($error->fails()){
+            return response()->json(['errors' => $error->errors()->all()]);
+        }
 
-        if (empty($audiovisualentrante)||$audiovisualentrante->id==$audioVisual->id) {
+        $audiovisual  = AudioVisual::find($id);
+        $nombreNuevo=$request['nombre'].'.'.$audiovisual->extension;
+        $audiovisualentrante= Libro::where('nombre',$nombreNuevo)->first();
 
-            File::move(storage_path('audiovisuales/'.$audioVisual->nombre),
-             storage_path('audiovisuales/'.$request['nombre'].'.'.$audioVisual->extension));
-        
-            $ruta='../storage/audiovisuales/'.$request['nombre'].'.'.$audioVisual->extension;
+        if (empty($audiovisualentrante)) {
+
+            Storage::move('/public/libros/'.$audiovisual->nombre,
+            '/public/libros/'.$nombreNuevo);
+                   
+            $ruta='/public/libros/'.$nombreNuevo;
 
             $input = [
-                'nombre' => $request['nombre'].'.'.$audioVisual->extension,
+                'nombre' => $nombreNuevo,
                 'descripcion' => $request['descripcion'],
+                'estado' => $request['estado'],
                 'ruta' => $ruta
             ];
         
-            $audioVisual->update($input);
+            $audiovisual->update($input);
+        }elseif($audiovisualentrante->id==$audiovisual->id){
 
-            Toastr::success('Actualizacion Exitosa', 'Excelente!!!', 
-                ["positionClass" => "toast-top-right"]);
-
-            return redirect('admin/gestionarAudioVisuales');
-        }else{
-            Toastr::error('Ya existe un archivo con ese nombre...','Error!!!', 
-                    ["positionClass" => "toast-top-right"]);
-
-                    return redirect()->back();
-        }
+            $input = [
+                'descripcion' => $request['descripcion'],
+                'estado' => $request['estado']
+            ];
         
+            $audiovisual->update($input);
+            
+        }else{
+            return response()->json(['errors' => 
+                        [0 =>'ya existe un Archivo Multimedia con ese nombre']
+                        ]);
+        }
+
+        return Response::json($audiovisual);
     }
 
     /**
@@ -186,19 +172,15 @@ class AudioVisualController extends Controller
      */
     public function destroy($id)
     {
-        $audioVisual = AudioVisual::find($id);
-        File::delete($audioVisual->ruta);
-        $audioVisual->delete();
-
-        Toastr::success('Eliminacion Exitosa', 'Excelente!!!', 
-            ["positionClass" => "toast-top-right"]);
-
-        return redirect('admin/gestionarAudioVisuales');
+        $audiovisual = AudioVisual::find($id);
+        Storage::disk('local')->delete($audiovisual->ruta);
+        $audiovisual->delete();
+        return Response::json($audiovisual);
     }
 
     public function descargar($id)
     {
         $audiovisual = AudioVisual::find($id);
-        return response()->download($audiovisual->ruta);
+        return response()->download(storage_path("app".$audiovisual->ruta));
     }
 }

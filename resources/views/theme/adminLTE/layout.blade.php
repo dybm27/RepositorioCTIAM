@@ -22,6 +22,7 @@
     <link rel="stylesheet" href="{{asset("assets/$theme/dist/css/skins/_all-skins.min.css")}}">
     <link rel="stylesheet" href="http://cdn.bootcss.com/toastr.js/latest/css/toastr.min.css">
     <link rel="stylesheet" href="//cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="{{asset("assets/dropzone/css/dropzone.css")}}">
     <!-- css Dumar -->
     <link rel="stylesheet" href="{{asset("css/dumar.css")}}">
 
@@ -98,7 +99,6 @@
     {!! Toastr::message() !!}
     <script src="//cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
     <script src="{{asset("js/dumar.js")}}"></script>
-    <script src="{{asset("js/usuariosAjax.js")}}"></script>
-    @yield('script')
+     @yield('script')
   </body>
 </html>
