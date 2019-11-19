@@ -1,0 +1,1 @@
+<a href="gestionarArchivosCapacitacion/{{$capacitacion_id}}/descargar/{{$id}}"><img src={{asset("iconos/$extension.png")}}></a>

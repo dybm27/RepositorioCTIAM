@@ -1,0 +1,1 @@
+<a href="gestionarRevistas/descargar/{{$id}}"><img src={{asset("iconos/$extension.png")}}></a>
