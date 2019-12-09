@@ -1,13 +1,13 @@
 <?php
 
-namespace RepoCTIAM\Http\Controllers;
+namespace App\Http\Controllers;
 
-use RepoCTIAM\Capacitacion;
+use App\Capacitacion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
-use RepoCTIAM\ArchivosCapacitacion;
+use App\ArchivosCapacitacion;
 
 
 class CapacitacionController extends Controller
@@ -69,7 +69,7 @@ class CapacitacionController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \RepoCTIAM\Capacitacion  $capacitacion
+     * @param  \App\Capacitacion  $capacitacion
      * @return \Illuminate\Http\Response
      */
     public function show(Capacitacion $capacitacion)
@@ -80,7 +80,7 @@ class CapacitacionController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \RepoCTIAM\Capacitacion  $capacitacion
+     * @param  \App\Capacitacion  $capacitacion
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -93,7 +93,7 @@ class CapacitacionController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \RepoCTIAM\Capacitacion  $capacitacion
+     * @param  \App\Capacitacion  $capacitacion
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -130,7 +130,7 @@ class CapacitacionController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \RepoCTIAM\Capacitacion  $capacitacion
+     * @param  \App\Capacitacion  $capacitacion
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
@@ -153,12 +153,14 @@ class CapacitacionController extends Controller
             $nombre=$id.'-'.$fileName;
             Storage::disk('local')->put('/public/archivosCapacitaciones/'.$id.'/'.$nombre,file_get_contents($archivo));
             $ruta='/public/archivosCapacitaciones/'.$id.'/'.$nombre;
+            $rutaPublica='/storage/archivosCapacitaciones/'.$id.'/'.$nombre;
 
             ArchivosCapacitacion::create([
                 'nombre' => $nombre,
                 'capacitacion_id' => $id,
                 'extension' => $extension,
-                'ruta' => $ruta
+                'ruta' => $ruta,
+                'rutaPublica' => $rutaPublica
             ]);
         }
     }

@@ -8,6 +8,14 @@
     <h1> Gestionar Informacion</h1>
 @endsection
 
+@section('claseMenuInfo')
+    active menu-open
+@endsection
+
+@section('claseAudi')
+    class="active"
+@endsection
+
 @section('contenido')
     <div class="row">
         <div class="col-xs-12">

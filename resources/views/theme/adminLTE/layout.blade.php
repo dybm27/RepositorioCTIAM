@@ -4,7 +4,8 @@
     <meta charset="utf-8">
     <meta name="_token" content="{!! csrf_token() !!}" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>@yield("titulo","Inicio") | ReporsitorioCTIAM</title>
+    <link rel="shortcut icon" type="image/x-icon" href="{{asset('favicon.ico')}}">
+    <title>@yield("titulo") | ReporsitorioCTIAM</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.7 -->
@@ -21,10 +22,10 @@
         folder instead of downloading all of them to reduce the load. -->
     <link rel="stylesheet" href="{{asset("assets/$theme/dist/css/skins/_all-skins.min.css")}}">
     <link rel="stylesheet" href="http://cdn.bootcss.com/toastr.js/latest/css/toastr.min.css">
-    <link rel="stylesheet" href="//cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="{{asset("assets/dropzone/css/dropzone.css")}}">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.20/datatables.min.css"/>
     <!-- css Dumar -->
-    <link rel="stylesheet" href="{{asset("css/dumar.css")}}">
+    <link rel="stylesheet" href="{{asset("css/admin.css")}}">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -34,10 +35,10 @@
     <![endif]-->
 
     <!-- Google Font -->
-    <link rel="stylesheet"
-          href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
   </head>
-  <body class="hold-transition skin-blue sidebar-mini">
+  <body class="hold-transition skin-blue fixed sidebar-mini">
+    
     <div class="wrapper">
 
       <!-- header -->
@@ -69,7 +70,6 @@
         @include("theme/$theme/footer")
       <!-- fin footer-->
 
-      <!-- /.control-sidebar -->
     </div>
     <!-- ./wrapper -->
 
@@ -97,7 +97,8 @@
     <!-- js Dumar -->
     <script src="http://cdn.bootcss.com/toastr.js/latest/js/toastr.min.js"></script>
     {!! Toastr::message() !!}
-    <script src="//cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+    
+    <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.20/datatables.min.js"></script>
     <script src="{{asset("js/dumar.js")}}"></script>
      @yield('script')
   </body>

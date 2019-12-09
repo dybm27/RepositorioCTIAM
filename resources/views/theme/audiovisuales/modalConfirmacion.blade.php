@@ -8,7 +8,7 @@
                     <span aria-hidden="true">&times;</span></button>
             </div>
             <div class="modal-body" align="center">
-                <h4>Esta seguro que desea enviar el AudioVisual a la papelera?</h4>
+                <h4>Esta seguro que desea eliminar el AudioVisual?</h4>
             </div>
             <!-- /.box-body -->       
             <div class="modal-footer">

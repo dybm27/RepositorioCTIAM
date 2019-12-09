@@ -8,6 +8,14 @@
     <h1> Gestionar Informacion</h1>
 @endsection
 
+@section('claseMenuInfo')
+    active menu-open
+@endsection
+
+@section('claseDocu')
+    class="active"
+@endsection
+
 @section('contenido')
     <div class="row">
         <div class="col-xs-12">
@@ -23,6 +31,7 @@
                                 <th>Id</th>
                                 <th>Nombre</th>
                                 <th>Descripcion</th>
+                                <th>Tipo</th>
                                 <th>Estado</th>
                                 <th>Descargar</th>
                                 <th>Accion</th>
@@ -53,6 +62,7 @@
                     {data: 'id'},
                     {data: 'nombre'},
                     {data: 'descripcion'},
+                    {data: 'tipodocumento'},
                     {data: 'estado'},
                     {data: 'descargar'},
                     {data: 'btns'},

@@ -19,11 +19,11 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->unsignedInteger('tipousuario_id');
             $table->string('password');
+            $table->integer('is_admin');
             $table->rememberToken();
             $table->timestamps();
 
-            $table->foreign('tipousuario_id')
-                  ->references('id')->on('tipousuario');
+            $table->foreign('tipousuario_id')->references('id')->on('tipousuario');
         });
     }
 

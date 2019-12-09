@@ -1,6 +1,6 @@
 <?php
 
-namespace RepoCTIAM;
+namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -15,6 +15,7 @@ class AudioVisual extends Model
         'descripcion',
         'estado',
         'extension',
-        'ruta'
+        'ruta',
+        'rutaPublica'
     ];
 }

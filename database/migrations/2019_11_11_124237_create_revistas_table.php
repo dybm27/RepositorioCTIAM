@@ -20,6 +20,7 @@ class CreateRevistasTable extends Migration
             $table->string("estado");
             $table->string("extension");
             $table->string("ruta");
+            $table->string("rutaPublica");
             $table->timestamps();
         });
     }

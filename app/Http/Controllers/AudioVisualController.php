@@ -1,14 +1,14 @@
 <?php
 
-namespace RepoCTIAM\Http\Controllers;
+namespace App\Http\Controllers;
 
 use File;
-use RepoCTIAM\AudioVisual;
+use App\AudioVisual;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
-use RepoCTIAM\Http\Requests\ValidacionAudioVisual;
+use App\Http\Requests\ValidacionAudioVisual;
 use Toastr;
 
 class AudioVisualController extends Controller
@@ -38,20 +38,22 @@ class AudioVisualController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(ValidacionAudioVisual $request)
+    public function store(Request $request)
     {
-        $rules = array(
-            'audiovisual' => 'required|mimes:mp3,mp4',
+         $rules = array(
+            'audiovisual' => 'required|mimetypes:video/mp4',
             'descripcion' => 'required'
         );
-
-        $error=Validator::make($request->all(),$rules);
+        $messages = [
+            'audiovisual.mimetypes' => 'El campo audiovisual debe ser un archivo de tipo: mp4.'
+        ];
+        $error=Validator::make($request->all(),$rules,$messages);
         if($error->fails()){
             return response()->json(['errors' => $error->errors()->all()]);
         }
 
         //obtenemos el campo file definido en el formulario
-        $file = $request->file('libro');
+        $file = $request->file('audiovisual');
         //obtenemos el nombre del archivo
         $fileName = $file->getClientOriginalName();
     
@@ -64,13 +66,15 @@ class AudioVisualController extends Controller
 
             Storage::disk('local')->put('/public/audiovisuales/'.$fileName,file_get_contents($file));
             $ruta='/public/audiovisuales/'.$fileName;
-
+            $rutaPublica='/storage/audiovisuales/'.$fileName;
+            
             $audiovisual=  AudioVisual::create([
                 'nombre' => $fileName,
                 'descripcion' => $request['descripcion'],
                 'estado' => $request['estado'],
                 'extension' => $extension,
-                'ruta' => $ruta
+                'ruta' => $ruta,
+                'rutaPublica' => $rutaPublica
             ]);
         }else{
             return response()->json(['errors' => 
@@ -86,7 +90,7 @@ class AudioVisualController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \RepoCTIAM\AudioVisual  $audioVisual
+     * @param  \App\AudioVisual  $audioVisual
      * @return \Illuminate\Http\Response
      */
     public function show(AudioVisual $audioVisual)
@@ -97,7 +101,7 @@ class AudioVisualController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \RepoCTIAM\AudioVisual  $audioVisual
+     * @param  \App\AudioVisual  $audioVisual
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -113,7 +117,7 @@ class AudioVisualController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \RepoCTIAM\AudioVisual  $audioVisual
+     * @param  \App\AudioVisual  $audioVisual
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -129,20 +133,22 @@ class AudioVisualController extends Controller
 
         $audiovisual  = AudioVisual::find($id);
         $nombreNuevo=$request['nombre'].'.'.$audiovisual->extension;
-        $audiovisualentrante= Libro::where('nombre',$nombreNuevo)->first();
+        $audiovisualentrante= AudioVisual::where('nombre',$nombreNuevo)->first();
 
         if (empty($audiovisualentrante)) {
 
-            Storage::move('/public/libros/'.$audiovisual->nombre,
-            '/public/libros/'.$nombreNuevo);
+            Storage::move('/public/audiovisuales/'.$audiovisual->nombre,
+            '/public/audiovisuales/'.$nombreNuevo);
                    
-            $ruta='/public/libros/'.$nombreNuevo;
+            $ruta='/public/audiovisuales/'.$nombreNuevo;
+            $rutaPublica='/storage/audiovisuales/'.$nombreNuevo;
 
             $input = [
                 'nombre' => $nombreNuevo,
                 'descripcion' => $request['descripcion'],
                 'estado' => $request['estado'],
-                'ruta' => $ruta
+                'ruta' => $ruta,
+                'rutaPublica' => $rutaPublica
             ];
         
             $audiovisual->update($input);
@@ -167,7 +173,7 @@ class AudioVisualController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \RepoCTIAM\AudioVisual  $audioVisual
+     * @param  \App\AudioVisual  $audioVisual
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

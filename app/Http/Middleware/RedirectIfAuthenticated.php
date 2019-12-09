@@ -1,6 +1,6 @@
 <?php
 
-namespace RepoCTIAM\Http\Middleware;
+namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Support\Facades\Auth;
@@ -18,7 +18,11 @@ class RedirectIfAuthenticated
     public function handle($request, Closure $next, $guard = null)
     {
         if (Auth::guard($guard)->check()) {
-            return redirect('/admin/gestionarDocumentos');//para cuando ingresa en la url login ya estando logueado
+            if (Auth::user()->is_admin==1) {
+                return redirect('/admin');//para cuando ingresa en la url login ya estando logueado
+            }else{
+            return redirect('/web/usuariofinal');
+            }
         }
 
         return $next($request);

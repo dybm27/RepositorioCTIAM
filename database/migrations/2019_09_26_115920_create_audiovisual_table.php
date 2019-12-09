@@ -19,6 +19,7 @@ class CreateAudiovisualTable extends Migration
             $table->string("descripcion");
             $table->string("extension");
             $table->string("ruta");
+            $table->string("rutaPublica");
             $table->timestamps();
            /* $table->collation='utf8mb4_spanish_ci';
             $table->charset='utf8mb4';*/

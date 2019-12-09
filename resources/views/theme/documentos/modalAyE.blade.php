@@ -20,7 +20,15 @@
                                         <label id="nomRev" for="examplse">Nuevo Documento</label>
                                         <input type="file" id="documento" name="documento" >
                                         <input type="hidden" class="form-control" id="nombre" name="nombre" placeholder="nombre" value="{{ old('nombre') }}">
-                                    </div>                          
+                                    </div> 
+                                    <div class="form-group">
+                                        <label>Tipo Documento</label>
+                                        <select class="form-control" name="tipodocumento" id="tipodocumento">
+                                            @foreach ($tiposdocumentos as $tipodocumento)
+                                                    <option value="{{$tipodocumento->id}}">{{strtoupper($tipodocumento->nombre)}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>                         
                                     <div class="form-group">
                                         <label>Estado</label>
                                         <select class="form-control" name="estado" id="estado">

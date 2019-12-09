@@ -1,6 +1,6 @@
 <?php
 
-namespace RepoCTIAM;
+namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -15,7 +15,15 @@ class Documento extends Model
         'descripcion',
         'estado',
         'extension',
-        'ruta'
+        'ruta',
+        'rutaPublica',
+        'tipodocumento_id'
     ];
+
+    public function tipodocumento()
+    {
+        return $this->belongsTo(TipoDocumento::class);
+    }
+
 
 }

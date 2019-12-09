@@ -1,13 +1,15 @@
 <?php
 
-namespace RepoCTIAM\Http\Controllers;
+namespace App\Http\Controllers;
 
-use RepoCTIAM\User;
-use RepoCTIAM\TipoUsuario;
+use App\User;
+use App\TipoUsuario;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Response;
-use RepoCTIAM\Http\Requests\ValidacionUsuario;
+use Illuminate\Support\Str as IlluminateStr;
+use Psy\Util\Str;
+use App\Http\Requests\ValidacionUsuario;
 use Toastr;
 use Validator;
 
@@ -46,7 +48,7 @@ class UsuarioController extends Controller
     {
         $rules = array(
             'nombre' => 'required',
-            'email' => 'required|unique:users,email',
+            'email' => 'required|email|unique:users,email',
             'pass' => 'required|min:6'
         );
         $error=Validator::make($request->all(),$rules);
@@ -57,6 +59,7 @@ class UsuarioController extends Controller
             'name' => $request['nombre'],
             'email' => $request['email'],
             'tipousuario_id' => $request['tipousuario'],
+            'is_admin' =>0,
             'password' => Hash::make($request['pass'])
             ]);
 
@@ -66,7 +69,7 @@ class UsuarioController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \RepoCTIAM\Usuario  $usuario
+     * @param  \App\Usuario  $usuario
      * @return \Illuminate\Http\Response
      */
     public function show(Usuario $usuario)
@@ -77,7 +80,7 @@ class UsuarioController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \RepoCTIAM\Usuario  $usuario
+     * @param  \App\Usuario  $usuario
      * @return \Illuminate\Http\Response
      */
 
@@ -92,7 +95,7 @@ class UsuarioController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \RepoCTIAM\Usuario  $usuario
+     * @param  \App\Usuario  $usuario
      * @return \Illuminate\Http\Response
      */
 
@@ -128,7 +131,7 @@ class UsuarioController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \RepoCTIAM\Usuario  $usuario
+     * @param  \App\Usuario  $usuario
      * @return \Illuminate\Http\Response
      */
 

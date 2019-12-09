@@ -1,8 +1,9 @@
 <?php
 
-namespace RepoCTIAM\Http\Controllers;
+namespace App\Http\Controllers;
 
-use RepoCTIAM\Documento;
+use App\Documento;
+use App\TipoDocumento;
 use Illuminate\Http\Request; 
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -18,7 +19,8 @@ class DocumentoController extends Controller
      */
     public function index()
     {   
-        return view('theme.documentos.index');
+        $tiposdocumentos = TipoDocumento::orderBy('id')->get();
+        return view('theme.documentos.index',compact('tiposdocumentos'));
     }
 
     /**
@@ -62,13 +64,16 @@ class DocumentoController extends Controller
 
             Storage::disk('local')->put('/public/documentos/'.$fileName,file_get_contents($file));
             $ruta='/public/documentos/'.$fileName;
+            $rutaPublica='storage/documentos/'.$fileName;
 
             $documento=  Documento::create([
                 'nombre' => $fileName,
                 'descripcion' => $request['descripcion'],
+                'tipodocumento_id' => $request['tipodocumento'],
                 'estado' => $request['estado'],
                 'extension' => $extension,
-                'ruta' => $ruta
+                'ruta' => $ruta,
+                'rutaPublica' => $rutaPublica
             ]);
         }else{
             return response()->json(['errors' => 
@@ -81,7 +86,7 @@ class DocumentoController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \RepoCTIAM\Documento  $documento
+     * @param  \App\Documento  $documento
      * @return \Illuminate\Http\Response
      */
     public function show(Documento $documento)
@@ -92,7 +97,7 @@ class DocumentoController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \RepoCTIAM\Documento  $documento
+     * @param  \App\Documento  $documento
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -108,7 +113,7 @@ class DocumentoController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \RepoCTIAM\Documento  $documento
+     * @param  \App\Documento  $documento
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request,$id)
@@ -132,12 +137,15 @@ class DocumentoController extends Controller
             '/public/documentos/'.$nombreNuevo);
                    
             $ruta='/public/documentos/'.$nombreNuevo;
+            $rutaPublica='/storage/documentos/'.$nombreNuevo;
 
             $input = [
                 'nombre' => $nombreNuevo,
                 'descripcion' => $request['descripcion'],
+                'tipodocumento_id' => $request['tipodocumento'],
                 'estado' => $request['estado'],
-                'ruta' => $ruta
+                'ruta' => $ruta,
+                'rutaPublica' => $rutaPublica
             ];
         
             $documento->update($input);
@@ -145,6 +153,7 @@ class DocumentoController extends Controller
 
             $input = [
                 'descripcion' => $request['descripcion'],
+                'tipodocumento_id' => $request['tipodocumento'],
                 'estado' => $request['estado']
             ];
         
@@ -162,7 +171,7 @@ class DocumentoController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \RepoCTIAM\Documento  $documento
+     * @param  \App\Documento  $documento
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

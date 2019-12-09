@@ -38,6 +38,7 @@ $(document).ready(function(){
             parametros={
                 'nombre': $('#nombre').val(),
                 'descripcion': $('#descripcion').val(),
+                'tipodocumento': $('#tipodocumento').val(),
                 'estado': $('#estado').val()
             };
             my_url += '/editar/' + documento_id;
@@ -98,6 +99,7 @@ $(document).ready(function(){
                 $('#btnModal').val('update');
                 $('#nombre').val(data.nomsinext);
                 $('#descripcion').val(data.descripcion);
+                $("#tipodocumento option[value="+ data.tipodocumento_id +"]").prop("selected",true);
                 $("#estado option[value="+ data.estado +"]").prop("selected",true);
                 $('#documento_id').val(data.id);
                 $('#modalDocumentos').modal('show');

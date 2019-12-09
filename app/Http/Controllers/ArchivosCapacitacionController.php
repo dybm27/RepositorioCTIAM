@@ -1,13 +1,13 @@
 <?php
 
-namespace RepoCTIAM\Http\Controllers;
+namespace App\Http\Controllers;
 
-use RepoCTIAM\ArchivosCapacitacion;
+use App\ArchivosCapacitacion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
-use RepoCTIAM\Capacitacion;
+use App\Capacitacion;
 
 class ArchivosCapacitacionController extends Controller
 {
@@ -67,12 +67,14 @@ class ArchivosCapacitacionController extends Controller
             $nombre=$idc.'-'.$fileName;
             Storage::disk('local')->put('/public/archivosCapacitaciones/'.$idc.'/'.$nombre,file_get_contents($archivo));
             $ruta='/public/archivosCapacitaciones/'.$idc.'/'.$nombre;
+            $rutaPublica='/storage/archivosCapacitaciones/'.$idc.'/'.$nombre;
 
             ArchivosCapacitacion::create([
                 'nombre' => $nombre,
                 'capacitacion_id' => $idc,
                 'extension' => $extension,
-                'ruta' => $ruta
+                'ruta' => $ruta,
+                'rutaPublica' => $rutaPublica
             ]);
         }
 
@@ -82,7 +84,7 @@ class ArchivosCapacitacionController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \RepoCTIAM\ArchivosCapacitacion  $archivosCapacitacion
+     * @param  \App\ArchivosCapacitacion  $archivosCapacitacion
      * @return \Illuminate\Http\Response
      */
     public function show(ArchivosCapacitacion $archivosCapacitacion)
@@ -93,7 +95,7 @@ class ArchivosCapacitacionController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \RepoCTIAM\ArchivosCapacitacion  $archivosCapacitacion
+     * @param  \App\ArchivosCapacitacion  $archivosCapacitacion
      * @return \Illuminate\Http\Response
      */
     public function edit($idc,$id)
@@ -110,7 +112,7 @@ class ArchivosCapacitacionController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \RepoCTIAM\ArchivosCapacitacion  $archivosCapacitacion
+     * @param  \App\ArchivosCapacitacion  $archivosCapacitacion
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $idc,$id)
@@ -132,10 +134,12 @@ class ArchivosCapacitacionController extends Controller
             '/public/archivosCapacitaciones/'.$idc.'/'.$nombreNuevo);
                    
             $ruta='/public/archivosCapacitaciones/'.$idc.'/'.$nombreNuevo;
+            $rutaPublica='/storage/archivosCapacitaciones/'.$idc.'/'.$nombreNuevo;
 
             $input = [
                 'nombre' => $nombreNuevo,
-                'ruta' => $ruta
+                'ruta' => $ruta,
+                'rutaPublica' => $rutaPublica
             ];
         
             $archivoC->update($input);
@@ -154,7 +158,7 @@ class ArchivosCapacitacionController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \RepoCTIAM\ArchivosCapacitacion  $archivosCapacitacion
+     * @param  \App\ArchivosCapacitacion  $archivosCapacitacion
      * @return \Illuminate\Http\Response
      */
     public function destroy($idc,$id)
@@ -167,8 +171,8 @@ class ArchivosCapacitacionController extends Controller
 
     public function descargar($idc,$id)
     {
-       // $archivoC = ArchivosCapacitacion::find($id);
-        //return response()->download(storage_path('app'.$archivoC->ruta));
+       $archivoC = ArchivosCapacitacion::find($id);
+       return response()->download(storage_path('app'.$archivoC->ruta));
     }
 
     protected function validarNombres($files,$idc){

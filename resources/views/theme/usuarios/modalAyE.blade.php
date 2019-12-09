@@ -39,7 +39,7 @@
                                     <div class="input-group">
                                         <input type="password" class="form-control" id="pass" 
                                         name="pass" placeholder="Contraseña" value="{{ old('pass') }}">
-                                        <span class="input-group-addon" id="show_password" onclick="mostrarPassword()"><i class="fa  fa-eye-slash"></i></span>
+                                        <span class="input-group-addon" id="show_password" onclick="mostrarPassword()"><i class="icon fa  fa-eye-slash"></i></span>
                                     </div>
                                 </div>  
                             </form>

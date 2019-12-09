@@ -27,7 +27,7 @@
                                             <option value="visible">VISIBLE</option>
                                             <option value="oculto">OCULTO</option>
                                         </select>
-                                    </div>                                  
+                                    </div>                             
                                     <label>Descripcion</label>
                                     <textarea class="form-control" rows="3" placeholder="..." id="descripcion" name="descripcion">
                                         {{old('descripcion')}}</textarea>

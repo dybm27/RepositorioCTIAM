@@ -155,11 +155,11 @@ return [
         /*
          * Application Service Providers...
          */
-        RepoCTIAM\Providers\AppServiceProvider::class,
-        RepoCTIAM\Providers\AuthServiceProvider::class,
-        // RepoCTIAM\Providers\BroadcastServiceProvider::class,
-        RepoCTIAM\Providers\EventServiceProvider::class,
-        RepoCTIAM\Providers\RouteServiceProvider::class,
+        App\Providers\AppServiceProvider::class,
+        App\Providers\AuthServiceProvider::class,
+        // App\Providers\BroadcastServiceProvider::class,
+        App\Providers\EventServiceProvider::class,
+        App\Providers\RouteServiceProvider::class,
         Brian2694\Toastr\ToastrServiceProvider::class,
         Yajra\DataTables\DataTablesServiceProvider::class,
     ],

@@ -8,6 +8,10 @@
     <h1> Gestionar Usuarios</h1>
 @endsection
 
+@section('claseUsua')
+    class="active"
+@endsection
+
 @section('contenido')
     <div class="row">
         <div class="col-xs-12">

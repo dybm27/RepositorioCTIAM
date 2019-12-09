@@ -11,19 +11,33 @@
 |
 */
 
-/*Route::get('/', function () {
-    return view('welcome');
-});*/
-
-// ------ RUTA LOGIN ------
-
 use Illuminate\Support\Facades\Route;
 
-Route::get('/login', 'LoginController@index')->name('login');
+// ------ LOGIN ------
+//debe llamarse login para que el metodo render del archivo app/exceptions/handler no genere error
+Route::get('/','Auth\LoginController@showLoginForm')->name('login'); 
+Route::post('login', 'Auth\LoginController@login')->name('iniciar_sesion');
+Route::post('cerrarsesion','Auth\LoginController@logout')->name('cerrar_sesion');
+
+// ------ REGISTRAR ------
+// Registration Routes...
+Route::get('registrar', 'Auth\RegisterController@showRegistrationForm')->name('form_registrar');
+Route::post('registrar', 'Auth\RegisterController@register')->name('registrar');
+
+// ------ RESTABLECER CONTRASEÑA ------
+// Password Reset Routes...
+//Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.request');
+//Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
+//Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
+//Route::post('password/reset', 'Auth\ResetPasswordController@reset');
+
 
 // ---------- RUTAS DE ADMIN ------
-Route::group(['prefix' => '/admin'/*,'middleware'=>'auth'*/], function () {
-    Route::get('/','InicioController@index')->name('admin_inico');
+Route::group(['prefix' => '/admin','middleware' => ['auth','admin:1']], function () {
+
+    // --------- PERFIL ----------
+    Route::get('/','PerfilController@index')->name('admin_perfil');
+    Route::put('/{id}','PerfilController@update')->name('admin_actualizar');
 
     // --------- DOCUMENTOS ----------
     Route::get('/gestionarDocumentos','DocumentoController@index')->name('listar_documentos');
@@ -64,7 +78,7 @@ Route::group(['prefix' => '/admin'/*,'middleware'=>'auth'*/], function () {
      Route::get('/gestionarLibros/eliminar/{id}','LibroController@destroy')->name('eliminar_libro');
      Route::get('/gestionarLibros/descargar/{id}','LibroController@descargar')->name('descargar_libro');
      
-     // --------- Capacitaciones ---------
+     // --------- CAPACITACIONES ---------
      Route::get('/gestionarCapacitaciones','CapacitacionController@index')->name('listar_capacitaciones');                  
      Route::post('/gestionarCapacitaciones/agregar','CapacitacionController@store')->name('agregar_capacitacion');
      Route::get('/gestionarCapacitaciones/editar/{id}','CapacitacionController@edit')->name('formulario_editar_capacitacion');
@@ -72,15 +86,40 @@ Route::group(['prefix' => '/admin'/*,'middleware'=>'auth'*/], function () {
      Route::get('/gestionarCapacitaciones/eliminar/{id}','CapacitacionController@destroy')->name('eliminar_capacitacion');
 
 
-     // --------- ArchivosCapacitacion ---------
+     // --------- ARCHIVOS CAPACITACIONES ---------
      Route::get('/gestionarArchivosCapacitacion/{id}','ArchivosCapacitacionController@index')->name('listar_archivoscapacitacion');   
      Route::post('/gestionarArchivosCapacitacion/{idc}/agregar','ArchivosCapacitacionController@store')->name('agregar_archivoscapacitacion');
      Route::get('/gestionarArchivosCapacitacion/{idc}/editar/{id}','ArchivosCapacitacionController@edit')->name('formulario_editar_archivocapacitacion');
      Route::put('/gestionarArchivosCapacitacion/{idc}/editar/{id}','ArchivosCapacitacionController@update')->name('editar_archivocapacitacion');
      Route::get('/gestionarArchivosCapacitacion/{idc}/eliminar/{id}','ArchivosCapacitacionController@destroy')->name('eliminar_archivocapacitacion');
-     Route::get('/gestionarArchivosCapacitacion/{idc}/descargar/{id}','ArchivosCapacitacionController@descargar')->name('descargar_archivocapacitacion');               
+     Route::get('/gestionarArchivosCapacitacion/{idc}/descargar/{id}','ArchivosCapacitacionController@descargar')->name('descargar_archivocapacitacion');   
+     
+     // --------- ESTADISTICAS ---------
+     Route::get('/estadisticas/usuarios','EstadisticasController@indexUsuarios')->name('ver_estadisticas_usuarios'); 
+     Route::get('/estadisticas/usuarios/grafica_registros/{anio}/{mes}', 'EstadisticasController@registros_mes')->name('grafica_registros');
+     Route::get('/estadisticas/usuarios/grafica_registrosTipo/{anio}/{mes}', 'EstadisticasController@registrosTipo_mes')->name('grafica_registrosTipo_mes');
+     Route::get('/estadisticas/usuarios/grafica_inicioSesionTipo/{anio}/{mes}', 'EstadisticasController@inicioSesionTipo')->name('grafica_registrosTipo_mes');
+     Route::get('/estadisticas/archivos','EstadisticasController@indexArchivos')->name('ver_estadisticas_archivos'); 
+
+     // --------- SLIDER ---------
+     Route::get('/gestionarSlider','SliderController@index')->name('listar_sliders');                  
+     Route::post('/gestionarSlider/agregar','SliderController@store')->name('agregar_slider');
+     Route::get('/gestionarSlider/editar/{id}','SliderController@edit')->name('formulario_editar_slider');
+     Route::post('/gestionarSlider/editar/{id}','SliderController@update')->name('editar_slider');
+     Route::get('/gestionarSlider/eliminar/{id}','SliderController@destroy')->name('eliminar_slider');
+
+     
 });
 
-//Auth::routes();
 
-//Route::get('/home', 'HomeController@index')->name('home');
+// -------------- USUARIO FINAL --------------------
+Route::group(['prefix' => '/usuariofinal','middleware' => 'auth'], function () {
+
+     Route::get('/', 'UsuarioFinalController@index')->name('inicio');
+     Route::get('/multimedia', 'UsuarioFinalController@multimedia')->name('multimedia');
+     Route::get('/multimedia/libros', 'UsuarioFinalController@multimediaLibros')->name('multimedia_libros');
+     Route::get('/multimedia/libros/descargar/{id}','LibroController@descargar')->name('descargar_libro_usuariofinal');
+     Route::get('/multimedia/revistas', 'UsuarioFinalController@multimediaRevistas')->name('multimedia_revistas');
+     Route::get('/multimedia/revistas/descargar/{id}','RevistaController@descargar')->name('descargar_revista_usuariofinal');
+     
+});

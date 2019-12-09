@@ -1,15 +1,15 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use RepoCTIAM\ArchivosCapacitacion;
-use RepoCTIAM\AudioVisual;
-use RepoCTIAM\Capacitacion;
-use RepoCTIAM\Documento;
-use RepoCTIAM\Libro;
-use RepoCTIAM\Revista;
-use RepoCTIAM\TipoUsuario;
-use RepoCTIAM\User;
+use App\AudioVisual;
+use App\Capacitacion;
+use App\Documento;
+use App\Libro;
+use App\Revista;
+use App\Slider;
+use App\TipoDocumento;
+use App\TipoUsuario;
+use App\User;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,7 +28,7 @@ use RepoCTIAM\User;
 
 Route::get('users', function () {
     return datatables()
-        ->eloquent(User::query())
+        ->eloquent(User::query()->where('is_admin','0'))
         ->addColumn('tipousuario', function($data){
             $tiposusuarios = TipoUsuario::orderBy('id')->get();
             $tipoU='';
@@ -47,6 +47,16 @@ Route::get('users', function () {
 Route::get('documentos', function () {
     return datatables()
         ->eloquent(Documento::query())
+        ->addColumn('tipodocumento', function($data){
+            $tiposdocumentos = TipoDocumento::orderBy('id')->get();
+            $tipoD='';
+            foreach($tiposdocumentos as $tipo){
+                if ($tipo->id==$data->tipodocumento_id) {
+                    $tipoD=$tipo->nombre;
+                }
+            }
+            return $tipoD;
+        })
         ->addColumn('descargar','theme.documentos.btnsDescargar')
         ->addColumn('btns','theme.documentos.btnsIndex')
         ->rawColumns(['btns','descargar'])
@@ -99,3 +109,11 @@ Route::get('archivosCapacitacion/{id}', function () {
         ->toJson();
 })->name('listar_archivosCapacitacion');
 
+Route::get('sliders', function () {
+    return datatables()
+        ->eloquent(Slider::query())
+        ->addColumn('img','theme.sliders.img')
+        ->addColumn('btns','theme.sliders.btnsIndex')
+        ->rawColumns(['btns','img'])
+        ->toJson();
+});

@@ -1,8 +1,8 @@
 <?php
 
-namespace RepoCTIAM\Http\Controllers;
+namespace App\Http\Controllers;
 
-use RepoCTIAM\Libro;
+use App\Libro;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Response;
@@ -62,13 +62,16 @@ class LibroController extends Controller
 
             Storage::disk('local')->put('/public/libros/'.$fileName,file_get_contents($file));
             $ruta='/public/libros/'.$fileName;
+            $rutaPublica='/storage/libros/'.$fileName;
 
             $libro=  Libro::create([
                 'nombre' => $fileName,
                 'descripcion' => $request['descripcion'],
                 'estado' => $request['estado'],
                 'extension' => $extension,
-                'ruta' => $ruta
+                'ruta' => $ruta,
+                'rutaPublica' => $rutaPublica,
+                'tipo' => 'libro'
             ]);
         }else{
             return response()->json(['errors' => 
@@ -82,7 +85,7 @@ class LibroController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \RepoCTIAM\Libro  $libro
+     * @param  \App\Libro  $libro
      * @return \Illuminate\Http\Response
      */
     public function show(Libro $libro)
@@ -93,7 +96,7 @@ class LibroController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \RepoCTIAM\Libro  $libro
+     * @param  \App\Libro  $libro
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -109,7 +112,7 @@ class LibroController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \RepoCTIAM\Libro  $libro
+     * @param  \App\Libro  $libro
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -133,12 +136,14 @@ class LibroController extends Controller
             '/public/libros/'.$nombreNuevo);
                    
             $ruta='/public/libros/'.$nombreNuevo;
+            $rutaPublica='/storage/libros/'.$nombreNuevo;
 
             $input = [
                 'nombre' => $nombreNuevo,
                 'descripcion' => $request['descripcion'],
                 'estado' => $request['estado'],
-                'ruta' => $ruta
+                'ruta' => $ruta,
+                'rutaPublica' => $rutaPublica
             ];
         
             $libro->update($input);
@@ -163,7 +168,7 @@ class LibroController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \RepoCTIAM\Libro  $libro
+     * @param  \App\Libro  $libro
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

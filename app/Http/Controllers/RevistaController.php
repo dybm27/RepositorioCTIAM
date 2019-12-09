@@ -1,8 +1,8 @@
 <?php
 
-namespace RepoCTIAM\Http\Controllers;
+namespace App\Http\Controllers;
 
-use RepoCTIAM\Revista;
+use App\Revista;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Response;
@@ -63,13 +63,16 @@ class RevistaController extends Controller
 
             Storage::disk('local')->put('/public/revistas/'.$fileName,file_get_contents($file));
             $ruta='/public/revistas/'.$fileName;
+            $rutaPublica='/storage/revistas/'.$fileName;
 
             $revista=  Revista::create([
                 'nombre' => $fileName,
                 'descripcion' => $request['descripcion'],
                 'estado' => $request['estado'],
                 'extension' => $extension,
-                'ruta' => $ruta
+                'ruta' => $ruta,
+                'rutaPublica' => $rutaPublica,
+                'tipo' => 'revista'
             ]);
         }else{
             return response()->json(['errors' => 
@@ -83,7 +86,7 @@ class RevistaController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \RepoCTIAM\Revista  $revista
+     * @param  \App\Revista  $revista
      * @return \Illuminate\Http\Response
      */
     public function show(Revista $revista)
@@ -94,7 +97,7 @@ class RevistaController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \RepoCTIAM\Revista  $revista
+     * @param  \App\Revista  $revista
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -110,7 +113,7 @@ class RevistaController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \RepoCTIAM\Revista  $revista
+     * @param  \App\Revista  $revista
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -134,12 +137,14 @@ class RevistaController extends Controller
             '/public/revistas/'.$nombreNuevo);
                    
             $ruta='/public/revistas/'.$nombreNuevo;
+            $rutaPublica='/storage/revistas/'.$nombreNuevo;
 
             $input = [
                 'nombre' => $nombreNuevo,
                 'descripcion' => $request['descripcion'],
                 'estado' => $request['estado'],
-                'ruta' => $ruta
+                'ruta' => $ruta,
+                'rutaPublica' => $rutaPublica
             ];
         
             $revista->update($input);
@@ -162,7 +167,7 @@ class RevistaController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \RepoCTIAM\Revista  $revista
+     * @param  \App\Revista  $revista
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

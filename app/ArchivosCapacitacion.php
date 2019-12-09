@@ -1,6 +1,6 @@
 <?php
 
-namespace RepoCTIAM;
+namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -16,7 +16,8 @@ class ArchivosCapacitacion extends Model
         'descripcion',
         'estado',
         'extension',
-        'ruta'
+        'ruta',
+        'rutaPublica'
     ];
 
     public function capacitacion()

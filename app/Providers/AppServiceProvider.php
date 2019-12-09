@@ -1,7 +1,8 @@
 <?php
 
-namespace RepoCTIAM\Providers;
+namespace App\Providers;
 
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
 
@@ -13,7 +14,8 @@ class AppServiceProvider extends ServiceProvider
      * @return void
      */
     public function boot()
-    {
+    {   
+        Schema::defaultStringLength(191);
         View::share('theme', 'adminLTE');
     }
 
