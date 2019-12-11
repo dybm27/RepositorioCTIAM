@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Libro;
+use App\VistasDescargasLibros;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Response;
 use Validator;
@@ -182,6 +184,28 @@ class LibroController extends Controller
     public function descargar($id)
     {
         $libro = Libro::find($id);
+        $user=Auth::user();
+        if ($user->is_admin==0) {
+            VistasDescargasLibros::create([
+                'id_libro'=>$libro->id,
+                'tipo_accion'=>'descarga',
+                'tipo_archivo'=>'libro'
+            ]);
+        }
+       
         return response()->download(storage_path("app".$libro->ruta));
+    }
+
+    public function ver($id)
+    {
+        $libro = Libro::find($id);
+        $user=Auth::user();
+        if ($user->is_admin==0) {
+            VistasDescargasLibros::create([
+                'id_libro'=>$libro->id,
+                'tipo_accion'=>'vista',
+                'tipo_archivo'=>'libro'
+            ]);
+        }
     }
 }

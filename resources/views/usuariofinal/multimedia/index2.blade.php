@@ -31,7 +31,8 @@
 						<div class="img-multimedia" style="background-image: url({{asset("EjemploImagenes/libros.png")}})"></div> <!-- /img-multimedia -->
 						<div class="txt-temas">
 							<p>{{$result['descripcion']}}</p>
-							<a class="ver-pdf" data-type="iframe" data-src="{{asset($result['rutaPublica'])}}" href="javascript:;">
+							<a class="ver-pdf" data-type="iframe" data-src="{{asset($result['rutaPublica'])}}" 
+								data-id="{{$result['id']}}" data-tipo="{{$result['tipo']}}">
 								<p>+ver</p>
 							</a>
 							<a class="descargar" @if ($tipo=='libros')

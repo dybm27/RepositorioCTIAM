@@ -45,7 +45,7 @@
         </div>
         @include('usuariofinal.tema.navResponsivo')
         
-        <script language="javascript" src="{{asset("assets/usuarioFinal/wp-content/themes/ilsb/assets/js/global.js")}}"></script>
+        <script language="javascript" src="{{asset("assets/usuarioFinal/js/global.js")}}"></script>
         <script language="javascript" src="{{asset("assets/usuarioFinal/wp-content/themes/ilsb/assets/js/validacion.js")}}"></script>
         
         <script type='text/javascript' src='{{asset("assets/usuarioFinal/wp-includes/js/wp-embed.min.js?ver=5.2.4")}}'></script>

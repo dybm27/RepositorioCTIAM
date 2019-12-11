@@ -2,22 +2,22 @@ function cambiar_fecha_grafica(){
     var anio_sel=$("#anio_sel").val();
     var mes_sel=$("#mes_sel").val();
 
-    cargar_grafica_barras(anio_sel,mes_sel);
-    cargar_grafica_pie(anio_sel,mes_sel);
-    cargar_grafica_pie2(anio_sel,mes_sel);
+    grafica_registros_usuarios(anio_sel,mes_sel);
+    grafica_registros_usuarios_tipo(anio_sel,mes_sel);
+    grafica_inicios_sesion_tipo(anio_sel,mes_sel);
 }
 
 
 
-function cargar_grafica_barras(anio,mes){
+function grafica_registros_usuarios(anio,mes){
 
     var options={
         chart: {
-            renderTo: 'div_grafica_barras',
+            renderTo: 'div_grafica_registros_usuarios',
             type: 'column'
         },
         title: {
-            text: 'Numero de Registros en el Mes'
+            text: 'Numero De Registros En El Mes'
         },
         subtitle: {
             text: ''
@@ -83,10 +83,10 @@ function cargar_grafica_barras(anio,mes){
 
 }
 
-function cargar_grafica_pie(anio,mes){
+function grafica_registros_usuarios_tipo(anio,mes){
     var options={
                 chart: {
-                    renderTo: 'div_grafica_pie',
+                    renderTo: 'div_grafica_registros_usuarios_tipo',
                     plotBackgroundColor: null,
                     plotBorderWidth: null,
                     plotShadow: false,
@@ -134,10 +134,10 @@ function cargar_grafica_pie(anio,mes){
     })
 }
 
-function cargar_grafica_pie2(anio,mes){
+function grafica_inicios_sesion_tipo(anio,mes){
     var options={
                 chart: {
-                    renderTo: 'div_grafica_pie2',
+                    renderTo: 'div_grafica_inicios_sesion_tipo',
                     plotBackgroundColor: null,
                     plotBorderWidth: null,
                     plotShadow: false,

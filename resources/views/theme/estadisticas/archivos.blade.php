@@ -50,16 +50,31 @@
             <div class="box box-primary">
                 <div class="box-header with-border">
                     <i class="fa fa-bar-chart-o"></i>
-                    <h3 class="box-title">Registros de Usuario</h3>
+                    <h3 class="box-title">Visitas Archivos</h3>
                     <div class="box-tools pull-right">
-                        <div class="btn-group" id="realtime" data-toggle="btn-toggle">
-                            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i>
-                            </button>
-                        </div>
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                        </button>
                     </div>
                 </div>
                 <div class="box-body">
-                    <div id="div_grafica_barras"></div>
+                    <div class="box-body" id="div_grafica_visitas_archivos"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <i class="fa fa-bar-chart-o"></i>
+                    <h3 class="box-title">Descargas Archivos</h3>
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <div class="box-body" id="div_grafica_descargas_archivos"></div>
                 </div>
             </div>
         </div>
@@ -70,14 +85,14 @@
             <div class="box box-primary">
                 <div class="box-header with-border">
                     <i class="fa fa-bar-chart-o"></i>
-                    <h3 class="box-title">Registros de Usuario Por Tipo</h3>
+                    <h3 class="box-title">Top 5 Visitas Libros</h3>
                     <div class="box-tools pull-right">
                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
                         </button>
                     </div>
                 </div>
                 <div class="box-body">
-                    <div class="box-body" id="div_grafica_pie"></div>
+                    <div class="box-body" id="div_grafica_top_visitas_libros"></div>
                 </div>
             </div>
         </div>
@@ -85,14 +100,47 @@
             <div class="box box-primary">
                 <div class="box-header with-border">
                     <i class="fa fa-bar-chart-o"></i>
-                    <h3 class="box-title">Inicios de Sesion Por Tipo</h3>
+                    <h3 class="box-title">Top 5 Visitas Revistas</h3>
                     <div class="box-tools pull-right">
                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
                         </button>
                     </div>
                 </div>
                 <div class="box-body">
-                    <div class="box-body" id="div_grafica_pie2"></div>
+                    <div class="box-body" id="div_grafica_top_visitas_revistas"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <!-- Line chart -->
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <i class="fa fa-bar-chart-o"></i>
+                    <h3 class="box-title">Top 5 Descargas Libros</h3>
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <div class="box-body" id="div_grafica_top_descargas_libros"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <i class="fa fa-bar-chart-o"></i>
+                    <h3 class="box-title">Top 5 Descargas Revistas</h3>
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <div class="box-body" id="div_grafica_top_descargas_revistas"></div>
                 </div>
             </div>
         </div>
@@ -104,8 +152,11 @@
     <script src="{{asset("assets/highcharts/highcharts.js")}}"></script>
     <script src="{{asset("js/graficasArchivos.js")}}"></script>
     <script>          
-         cargar_grafica_barras({{$año}},{{$mes}});
-         cargar_grafica_pie({{$año}},{{$mes}});
-         cargar_grafica_pie2({{$año}},{{$mes}});
+         grafica_visitas_archivos({{$año}},{{$mes}});
+         grafica_descargas_archivos({{$año}},{{$mes}});
+         grafica_top_visitas_libros({{$año}},{{$mes}});
+         grafica_top_visitas_revistas({{$año}},{{$mes}});
+         grafica_top_descargas_libros({{$año}},{{$mes}});
+         grafica_top_descargas_revistas({{$año}},{{$mes}});
     </script>
 @endsection

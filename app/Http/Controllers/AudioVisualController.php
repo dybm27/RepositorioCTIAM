@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\ValidacionAudioVisual;
+use App\VistasVideos;
+use Illuminate\Support\Facades\Auth;
 use Toastr;
 
 class AudioVisualController extends Controller
@@ -188,5 +190,19 @@ class AudioVisualController extends Controller
     {
         $audiovisual = AudioVisual::find($id);
         return response()->download(storage_path("app".$audiovisual->ruta));
+    }
+
+    public function ver($id)
+    {  
+        $audiovisual = AudioVisual::find($id);
+        $user=Auth::user();
+
+        if ($user->is_admin==0) {
+            VistasVideos::create([
+                'id_audiovisual'=>$audiovisual->id,
+                'tipo_accion'=>'vista',
+                'tipo_archivo'=>'video'
+            ]);
+        }
     }
 }

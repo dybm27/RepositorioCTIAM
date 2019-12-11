@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Revista;
+use App\VistasDescargasRevistas;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
@@ -181,6 +183,27 @@ class RevistaController extends Controller
     public function descargar($id)
     {
         $revista = Revista::find($id);
+        $user=Auth::user();
+        if ($user->is_admin==0) {
+            VistasDescargasRevistas::create([
+                'id_revista'=>$revista->id,
+                'tipo_accion'=>'descarga',
+                'tipo_archivo'=>'revista'
+            ]);
+        }
         return response()->download(storage_path("app".$revista->ruta));
+    }
+
+    public function ver($id)
+    {
+        $revista = Revista::find($id);
+        $user=Auth::user();
+        if ($user->is_admin==0) {
+            VistasDescargasRevistas::create([
+                'id_revista'=>$revista->id,
+                'tipo_accion'=>'vista',
+                'tipo_archivo'=>'revista'
+            ]);
+        }
     }
 }

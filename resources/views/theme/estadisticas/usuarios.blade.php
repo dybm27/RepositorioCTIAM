@@ -59,7 +59,7 @@
                     </div>
                 </div>
                 <div class="box-body">
-                    <div id="div_grafica_barras"></div>
+                    <div id="div_grafica_registros_usuarios"></div>
                 </div>
             </div>
         </div>
@@ -77,7 +77,7 @@
                     </div>
                 </div>
                 <div class="box-body">
-                    <div class="box-body" id="div_grafica_pie"></div>
+                    <div class="box-body" id="div_grafica_registros_usuarios_tipo"></div>
                 </div>
             </div>
         </div>
@@ -92,7 +92,7 @@
                     </div>
                 </div>
                 <div class="box-body">
-                    <div class="box-body" id="div_grafica_pie2"></div>
+                    <div class="box-body" id="div_grafica_inicios_sesion_tipo"></div>
                 </div>
             </div>
         </div>
@@ -104,8 +104,8 @@
     <script src="{{asset("assets/highcharts/highcharts.js")}}"></script>
     <script src="{{asset("js/graficasUsuarios.js")}}"></script>
     <script>          
-         cargar_grafica_barras({{$año}},{{$mes}});
-         cargar_grafica_pie({{$año}},{{$mes}});
-         cargar_grafica_pie2({{$año}},{{$mes}});
+         grafica_registros_usuarios({{$año}},{{$mes}});
+         grafica_registros_usuarios_tipo({{$año}},{{$mes}});
+         grafica_inicios_sesion_tipo({{$año}},{{$mes}});
     </script>
 @endsection

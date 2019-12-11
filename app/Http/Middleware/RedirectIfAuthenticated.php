@@ -21,7 +21,7 @@ class RedirectIfAuthenticated
             if (Auth::user()->is_admin==1) {
                 return redirect('/admin');//para cuando ingresa en la url login ya estando logueado
             }else{
-            return redirect('/web/usuariofinal');
+            return redirect('/usuariofinal');
             }
         }
 
