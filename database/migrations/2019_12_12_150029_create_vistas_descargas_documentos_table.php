@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateVistasDescargasLibrosTable extends Migration
+class CreateVistasDescargasDocumentosTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,14 @@ class CreateVistasDescargasLibrosTable extends Migration
      */
     public function up()
     {
-        Schema::create('vistas_descargas_libros', function (Blueprint $table) {
+        Schema::create('vistas_descargas_documentos', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('id_libro');
+            $table->unsignedInteger('id_documento');
             $table->string('tipo_accion');
             $table->string('tipo_archivo');
             $table->timestamps();
-
-            $table->foreign('id_libro')->references('id')->on('libros');
+    
+            $table->foreign('id_documento')->references('id')->on('documentos');
         });
     }
 
@@ -31,6 +31,6 @@ class CreateVistasDescargasLibrosTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('vistas_descargas_libros');
+        Schema::dropIfExists('vistas_descargas_documentos');
     }
 }

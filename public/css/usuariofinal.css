@@ -160,3 +160,23 @@ a {
 .slide-1 .txt-slide h1 {
     color: #c50083;
 }
+
+.dumar {
+    display: block;
+    padding: 10px 0 30px;
+}
+
+.categorias {
+    display: block;
+    padding: 15px 0 40px;
+    text-align: center;
+}
+
+.sidebar-form {
+    width: 40%;
+}
+
+hr {
+    clear: both;
+    visibility: hidden;
+}

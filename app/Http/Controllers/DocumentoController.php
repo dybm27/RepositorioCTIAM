@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Documento;
 use App\TipoDocumento;
-use Illuminate\Http\Request; 
+use App\VistasDescargasDocumentos;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Response;
@@ -41,7 +43,7 @@ class DocumentoController extends Controller
     public function store(Request $request)
     {
         $rules = array(
-            'documento' => 'required|mimes:docx,doc,pdf,pptx,xlsx',
+            'documento' => 'required|mimes:pdf',
             'descripcion' => 'required'
         );
 
@@ -185,6 +187,40 @@ class DocumentoController extends Controller
     public function descargar($id)
     {
         $documento = Documento::find($id);
+        $user=Auth::user();
+        if ($user->is_admin==0) {
+            VistasDescargasDocumentos::create([
+                'id_documento'=>$documento->id,
+                'tipo_accion'=>'descarga',
+                'tipo_archivo'=>$documento->tipodocumento->nombre
+            ]);
+        }
         return response()->download(storage_path("app".$documento->ruta));
     }
+
+    public function ver($id)
+    {
+        $documento = Documento::find($id);
+        $user=Auth::user();
+        if ($user->is_admin==0) {
+            VistasDescargasDocumentos::create([
+                'id_documento'=>$documento->id,
+                'tipo_accion'=>'visita',
+                'tipo_archivo'=>$documento->tipodocumento->nombre
+            ]);
+        }
+    }
+    public function ver2($tipo,$id)
+    {
+        $documento = Documento::find($id);
+        $user=Auth::user();
+        if ($user->is_admin==0) {
+            VistasDescargasDocumentos::create([
+                'id_documento'=>$documento->id,
+                'tipo_accion'=>'visita',
+                'tipo_archivo'=>$documento->tipodocumento->nombre
+            ]);
+        }
+    }
+    
 }

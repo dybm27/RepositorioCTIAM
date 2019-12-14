@@ -18,6 +18,8 @@ class CreateAudiovisualTable extends Migration
             $table->string("nombre")->unique();
             $table->string("descripcion");
             $table->string("extension");
+            $table->string("tipo");
+            $table->string("link");
             $table->string("ruta");
             $table->string("rutaPublica");
             $table->timestamps();

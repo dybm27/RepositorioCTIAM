@@ -80,67 +80,35 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-6">
-            <!-- Line chart -->
+        <div class="col-xs-12">
             <div class="box box-primary">
                 <div class="box-header with-border">
                     <i class="fa fa-bar-chart-o"></i>
-                    <h3 class="box-title">Top 5 Visitas Libros</h3>
+                    <h3 class="box-title">Top 5 Visitas</h3>
                     <div class="box-tools pull-right">
                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
                         </button>
                     </div>
                 </div>
                 <div class="box-body">
-                    <div class="box-body" id="div_grafica_top_visitas_libros"></div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="box box-primary">
-                <div class="box-header with-border">
-                    <i class="fa fa-bar-chart-o"></i>
-                    <h3 class="box-title">Top 5 Visitas Revistas</h3>
-                    <div class="box-tools pull-right">
-                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="box-body">
-                    <div class="box-body" id="div_grafica_top_visitas_revistas"></div>
+                    <div class="box-body" id="div_grafica_top_visitas"></div>
                 </div>
             </div>
         </div>
     </div>
     <div class="row">
-        <div class="col-md-6">
-            <!-- Line chart -->
+        <div class="col-xs-12">
             <div class="box box-primary">
                 <div class="box-header with-border">
                     <i class="fa fa-bar-chart-o"></i>
-                    <h3 class="box-title">Top 5 Descargas Libros</h3>
+                    <h3 class="box-title">Top 5 Descargas</h3>
                     <div class="box-tools pull-right">
                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
                         </button>
                     </div>
                 </div>
                 <div class="box-body">
-                    <div class="box-body" id="div_grafica_top_descargas_libros"></div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="box box-primary">
-                <div class="box-header with-border">
-                    <i class="fa fa-bar-chart-o"></i>
-                    <h3 class="box-title">Top 5 Descargas Revistas</h3>
-                    <div class="box-tools pull-right">
-                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="box-body">
-                    <div class="box-body" id="div_grafica_top_descargas_revistas"></div>
+                    <div class="box-body" id="div_grafica_top_descargas"></div>
                 </div>
             </div>
         </div>
@@ -154,9 +122,7 @@
     <script>          
          grafica_visitas_archivos({{$año}},{{$mes}});
          grafica_descargas_archivos({{$año}},{{$mes}});
-         grafica_top_visitas_libros({{$año}},{{$mes}});
-         grafica_top_visitas_revistas({{$año}},{{$mes}});
-         grafica_top_descargas_libros({{$año}},{{$mes}});
-         grafica_top_descargas_revistas({{$año}},{{$mes}});
+         grafica_top_visitas({{$año}},{{$mes}});
+         grafica_top_descargas({{$año}},{{$mes}});
     </script>
 @endsection

@@ -1,1 +1,0 @@
-<a href="gestionarLibros/descargar/{{$id}}"><img src={{asset("iconos/$extension.png")}}></a>

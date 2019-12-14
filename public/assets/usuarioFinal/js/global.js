@@ -60,16 +60,16 @@ $('#verVideo').click(function (e){
 
 $('.ver-pdf').click(function(){
 	var id=$(this).data('id');
-	var tipo=$(this).data('tipo');
-	var url = $('#url').val();
+	var url = $('#url').val()+'/documentos/ver/'+id;
+	$.ajax({
+        url: url
+    })
+});
 
-	if(tipo=='libro'){
-		url +='/libros/ver/'+id;
-	}else{
-		url +='/revistas/ver/'+id;
-	}
-
-    $.ajax({
+$('.ver-pdf2').click(function(){
+	var id=$(this).data('id');
+	var url = $('#url2').val()+'/ver/'+id;
+	$.ajax({
         url: url
     })
 });

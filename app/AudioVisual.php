@@ -16,6 +16,8 @@ class AudioVisual extends Model
         'estado',
         'extension',
         'ruta',
-        'rutaPublica'
+        'rutaPublica',
+        'tipo',
+        'link'
     ];
 }

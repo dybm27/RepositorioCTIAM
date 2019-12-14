@@ -32,6 +32,8 @@
         <link rel="https://api.w.org/" href="{{asset("assets/usuarioFinal/wp-json/index.json")}}">
         <link rel="EditURI" type="application/rsd+xml" title="RSD" href="{{asset("assets/usuarioFinal/xmlrpc.xml?rsd")}}">
         <link rel="wlwmanifest" type="application/wlwmanifest+xml" href="{{asset("assets/usuarioFinal/wp-includes/wlwmanifest.xml")}}"> 
+         <!-- Bootstrap 3.3.7 -->
+        <link rel="stylesheet" href="{{asset("assets/$theme/bower_components/bootstrap/dist/css/bootstrap.min.css")}}">
         <!-- css Dumar -->
         <link rel="stylesheet" href="{{asset("css/usuariofinal.css")}}">
     </head>

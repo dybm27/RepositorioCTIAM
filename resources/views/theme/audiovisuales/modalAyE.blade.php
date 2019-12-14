@@ -16,11 +16,25 @@
                                 <span id="form_results"></span>
                                 <form  id="formAudioVisuales" method="post" enctype="multipart/form-data">
                                     @csrf
+                                    <div class="form-group">
+                                        <label id="nomb" for="examplse">Nombre</label>
+                                        <input type="text" class="form-control"  id="nombre" name="nombre" placeholder="nombre"  value="{{ old('nombre') }}" required>
+                                    </div> 
+                                    <div class="form-group">
+                                        <label id="select">Escoger tipo</label>
+                                        <select class="form-control" name="tipo" id="tipo" onChange="cambiarTipo()">
+                                            <option value="link">LINK</option>
+                                            <option value="archivo">ARCHIVO</option>
+                                        </select>
+                                    </div>  
                                     <div class="form-group archivo">
-                                        <label id="nomRev" for="examplse">Nuevo AudioVisual</label>
-                                        <input type="file" id="audiovisual" name="audiovisual" >
-                                        <input type="hidden" class="form-control" id="nombre" name="nombre" placeholder="nombre" value="{{ old('nombre') }}">
-                                    </div>                          
+                                        <label id="audiov" for="examplse">Nuevo AudioVisual</label>
+                                        <input type="file" id="audiovisual" name="audiovisual" disabled="true">
+                                    </div> 
+                                    <div class="form-group">
+                                        <label id="linklabel" for="examplse">Link</label>
+                                        <input type="text" class="form-control"  id="link" name="link" disabled="true" placeholder="link"  value="{{ old('link') }}">
+                                    </div>                           
                                     <div class="form-group">
                                         <label>Estado</label>
                                         <select class="form-control" name="estado" id="estado">
@@ -28,6 +42,10 @@
                                             <option value="oculto">OCULTO</option>
                                         </select>
                                     </div>                                  
+                               <!-- <div class="form-group archivo">
+                                        <label id="imaasdgen" for="examplse">Imagen</label>
+                                        <input type="file" id="imagen" name="imagen">
+                                    </div> -->
                                     <label>Descripcion</label>
                                     <textarea class="form-control" rows="3" placeholder="..." id="descripcion" name="descripcion">
                                         {{old('descripcion')}}</textarea>

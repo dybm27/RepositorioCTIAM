@@ -34,8 +34,6 @@
           <ul class="treeview-menu">
             <li @yield('claseDocu')><a href="{{route('listar_documentos')}}"><i class="fa fa-circle-o"></i> Documentos</a></li>
             <li @yield('claseAudi')><a href="{{route('listar_audiovisuales')}}"><i class="fa fa-circle-o"></i> Piezas Audiovisuales</a></li>
-            <li @yield('claseRevi')><a href="{{route('listar_revistas')}}"><i class="fa fa-circle-o"></i> Revistas</a></li>
-            <li @yield('claseLibr')><a href="{{route('listar_libros')}}"><i class="fa fa-circle-o"></i> Libros</a></li>
             <li @yield('claseCapa')><a href="{{route('listar_capacitaciones')}}"><i class="fa fa-circle-o"></i> Material de Capacitacion</a></li>
           </ul>
         </li>

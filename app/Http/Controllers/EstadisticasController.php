@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\InicioSesion;
 use App\TipoUsuario;
 use App\User;
+use App\VistasDescargasDocumentos;
 use App\VistasDescargasLibros;
 use App\VistasDescargasRevistas;
 use Illuminate\Http\Request;
@@ -19,9 +20,10 @@ class EstadisticasController extends Controller
      */
     public function indexUsuarios()
     {   
+
         $año=date("Y");
         $mes=date("m");
-     
+    
         $años=[
         "0" => "2018",
         "1" => "2019",
@@ -176,54 +178,53 @@ class EstadisticasController extends Controller
 
     public function visitas_mes($año,$mes){
         
-        $libros=$this->getLibros($año,$mes,'visitas',0);
-        $revistas=$this->getRevistas($año,$mes,'visitas',0);
-        
-        if ($mes==0) {
-            for($m=1;$m<=12;$m++){
-                $registrosLibros[$m]=0; 
-                $registrosRevistas[$m]=0;     
-            }
-            foreach($libros as $libro){
-                $mesU=intval(date("m",strtotime($libro->created_at) ) );
-                $registrosLibros[$mesU]++;    
-            }
-            foreach($revistas as $revista){
-                $mesU=intval(date("m",strtotime($revista->created_at) ) );
-                $registrosRevistas[$mesU]++;    
-            }
-            $data=array("totaldias"=>"12", "registrosLibros" =>$registrosLibros,
-            "registrosRevistas" =>$registrosRevistas);
-        }else{  
-            $ultimo_dia=$this->getUltimoDiaMes($año,$mes);
-            for($d=1;$d<=$ultimo_dia;$d++){
-                $registrosLibros[$d]=0; 
-                $registrosRevistas[$d]=0;        
-            }
-            foreach($libros as $libro){
-                $mesU=intval(date("d",strtotime($libro->created_at) ) );
-                $registrosLibros[$mesU]++;    
-            }
-            foreach($revistas as $revista){
-                $mesU=intval(date("d",strtotime($revista->created_at) ) );
-                $registrosRevistas[$mesU]++;    
-            }
-            $data=array("totaldias"=>$ultimo_dia, "registrosLibros" =>$registrosLibros,
-            "registrosRevistas" =>$registrosRevistas);
-        }
+        $libros=$this->getDocumentos($año,$mes,'visita','Libro');
+        $revistas=$this->getDocumentos($año,$mes,'visita','Revista');
+        $infotecnicos=$this->getDocumentos($año,$mes,'visita','Informe Tecnico');
+        $infoinves=$this->getDocumentos($año,$mes,'visita','Informe de Investigacion');
+        $infografias=$this->getDocumentos($año,$mes,'visita','Infografia');
 
+        $data=$this->getArrayDocumentos($año,$mes,$libros,$revistas,$infotecnicos,$infoinves,$infografias);
         return   json_encode($data);
     }
 
     public function descargas_mes($año,$mes){
         
-        $libros=$this->getLibros($año,$mes,'descargas',0);
-        $revistas=$this->getRevistas($año,$mes,'descargas',0);
+        $libros=$this->getDocumentos($año,$mes,'descarga','Libro');
+        $revistas=$this->getDocumentos($año,$mes,'descarga','Revista');
+        $infotecnicos=$this->getDocumentos($año,$mes,'descarga','Informe Tecnico');
+        $infoinves=$this->getDocumentos($año,$mes,'descarga','Informe de Investigacion');
+        $infografias=$this->getDocumentos($año,$mes,'descarga','Infografia');
         
+        $data=$this->getArrayDocumentos($año,$mes,$libros,$revistas,$infotecnicos,$infoinves,$infografias);
+        return   json_encode($data);
+    }
+
+    public function getDocumentos($año,$mes,$tipoaccion,$tipodocumento){
+        $primer_dia=1;
+        if($mes==0){
+            $ultimo_dia=$this->getUltimoDiaMes($año,12);
+            $fecha_inicial=date("Y-m-d H:i:s", strtotime($año."-1-".$primer_dia) );
+            $fecha_final=date("Y-m-d H:i:s", strtotime($año."-12-".$ultimo_dia) );          
+        }else{
+            $ultimo_dia=$this->getUltimoDiaMes($año,$mes);
+            $fecha_inicial=date("Y-m-d H:i:s", strtotime($año."-".$mes."-".$primer_dia) );
+            $fecha_final=date("Y-m-d H:i:s", strtotime($año."-".$mes."-".$ultimo_dia) );
+        }
+        return VistasDescargasDocumentos::whereBetween('created_at', [$fecha_inicial,  $fecha_final])
+                ->where('tipo_accion',$tipoaccion)
+                ->where('tipo_archivo',$tipodocumento)
+                ->get();
+    }
+
+    public function getArrayDocumentos($año,$mes,$libros,$revistas,$infotecnicos,$infoinves,$infografias){
         if ($mes==0) {
             for($m=1;$m<=12;$m++){
                 $registrosLibros[$m]=0; 
                 $registrosRevistas[$m]=0;     
+                $registrosInfoTec[$m]=0; 
+                $registrosInfoInv[$m]=0;   
+                $registrosInfoGra[$m]=0;
             }
             foreach($libros as $libro){
                 $mesU=intval(date("m",strtotime($libro->created_at) ) );
@@ -233,13 +234,29 @@ class EstadisticasController extends Controller
                 $mesU=intval(date("m",strtotime($revista->created_at) ) );
                 $registrosRevistas[$mesU]++;    
             }
+            foreach($infotecnicos as $infotecnico){
+                $mesU=intval(date("m",strtotime($infotecnico->created_at) ) );
+                $registrosInfoTec[$mesU]++;    
+            }
+            foreach($infoinves as $infoinve){
+                $mesU=intval(date("m",strtotime($infoinve->created_at) ) );
+                $registrosInfoInv[$mesU]++;    
+            }
+            foreach($infografias as $infografia){
+                $mesU=intval(date("m",strtotime($infografia->created_at) ) );
+                $registrosInfoGra[$mesU]++;    
+            }
             $data=array("totaldias"=>"12", "registrosLibros" =>$registrosLibros,
-            "registrosRevistas" =>$registrosRevistas);
+            "registrosRevistas" =>$registrosRevistas,"registrosInfoTec" =>$registrosInfoTec,
+             "registrosInfoInv" =>$registrosInfoInv,"registrosInfoGra" =>$registrosInfoGra);
         }else{  
             $ultimo_dia=$this->getUltimoDiaMes($año,$mes);
             for($d=1;$d<=$ultimo_dia;$d++){
                 $registrosLibros[$d]=0; 
-                $registrosRevistas[$d]=0;        
+                $registrosRevistas[$d]=0;      
+                $registrosInfoTec[$d]=0; 
+                $registrosInfoInv[$d]=0;   
+                $registrosInfoGra[$d]=0;  
             }
             foreach($libros as $libro){
                 $mesU=intval(date("d",strtotime($libro->created_at) ) );
@@ -249,110 +266,58 @@ class EstadisticasController extends Controller
                 $mesU=intval(date("d",strtotime($revista->created_at) ) );
                 $registrosRevistas[$mesU]++;    
             }
+            foreach($infotecnicos as $infotecnico){
+                $mesU=intval(date("d",strtotime($infotecnico->created_at) ) );
+                $registrosInfoTec[$mesU]++;    
+            }
+            foreach($infoinves as $infoinve){
+                $mesU=intval(date("d",strtotime($infoinve->created_at) ) );
+                $registrosInfoInv[$mesU]++;    
+            }
+            foreach($infografias as $infografia){
+                $mesU=intval(date("d",strtotime($infografia->created_at) ) );
+                $registrosInfoGra[$mesU]++;    
+            }
             $data=array("totaldias"=>$ultimo_dia, "registrosLibros" =>$registrosLibros,
-            "registrosRevistas" =>$registrosRevistas);
+            "registrosRevistas" =>$registrosRevistas,"registrosInfoTec" =>$registrosInfoTec,
+            "registrosInfoInv" =>$registrosInfoInv,"registrosInfoGra" =>$registrosInfoGra);
         }
+
+        return $data;
+
+    }
+    public function top_visitas_mes($año,$mes){
+        
+        $libros=$this->getDocumentosTop($año,$mes,'visita','Libro');
+        $revistas=$this->getDocumentosTop($año,$mes,'visita','Revista');
+        $infotecnicos=$this->getDocumentosTop($año,$mes,'visita','Informe Tecnico');
+        $infoinves=$this->getDocumentosTop($año,$mes,'visita','Informe de Investigacion');
+        $infografias=$this->getDocumentosTop($año,$mes,'visita','Infografia'); 
+        
+        $data=array("registrosLibros" =>$libros,"registrosRevistas" =>$revistas,
+            "registrosInfoTec" =>$infotecnicos,"registrosInfoInv" =>$infoinves,
+            "registrosInfoGra" =>$infografias);
+
+        return   json_encode($data);
+    }
+    
+    public function top_descargas_mes($año,$mes){
+        
+        $libros=$this->getDocumentosTop($año,$mes,'descarga','Libro');
+        $revistas=$this->getDocumentosTop($año,$mes,'descarga','Revista');
+        $infotecnicos=$this->getDocumentosTop($año,$mes,'descarga','Informe Tecnico');
+        $infoinves=$this->getDocumentosTop($año,$mes,'descarga','Informe de Investigacion');
+        $infografias=$this->getDocumentosTop($año,$mes,'descarga','Infografia');
+        
+        $data=array("registrosLibros" =>$libros,"registrosRevistas" =>$revistas,
+            "registrosInfoTec" =>$infotecnicos,"registrosInfoInv" =>$infoinves,
+            "registrosInfoGra" =>$infografias);
 
         return   json_encode($data);
     }
 
-    public function getLibros($año,$mes,$tipo){
+    public function getDocumentosTop($año,$mes,$tipoaccion,$tipodocumento){
         $primer_dia=1;
-        if($mes==0){
-            $ultimo_dia=$this->getUltimoDiaMes($año,12);
-            $fecha_inicial=date("Y-m-d H:i:s", strtotime($año."-1-".$primer_dia) );
-            $fecha_final=date("Y-m-d H:i:s", strtotime($año."-12-".$ultimo_dia) );
-          
-            if($tipo=='visitas'){
-                return VistasDescargasLibros::whereBetween('created_at', [$fecha_inicial,  $fecha_final])
-                    ->where('tipo_accion','vista')
-                    ->get();
-            }else{
-                return VistasDescargasLibros::whereBetween('created_at', [$fecha_inicial,  $fecha_final])
-                    ->where('tipo_accion','descarga')
-                    ->get();
-            }
-        
-        }else{
-            $ultimo_dia=$this->getUltimoDiaMes($año,$mes);
-            $fecha_inicial=date("Y-m-d H:i:s", strtotime($año."-".$mes."-".$primer_dia) );
-            $fecha_final=date("Y-m-d H:i:s", strtotime($año."-".$mes."-".$ultimo_dia) );
-           
-            if($tipo=='visitas'){
-                return VistasDescargasLibros::whereBetween('created_at', [$fecha_inicial,  $fecha_final])
-                    ->where('tipo_accion','vista')
-                    ->get();
-            }else{
-                return VistasDescargasLibros::whereBetween('created_at', [$fecha_inicial,  $fecha_final])
-                    ->where('tipo_accion','descarga')
-                    ->get();
-            }
-        
-        }
-    }
-
-    public function getRevistas($año,$mes,$tipo){
-        $primer_dia=1;
-        if($mes==0){
-            $ultimo_dia=$this->getUltimoDiaMes($año,12);
-            $fecha_inicial=date("Y-m-d H:i:s", strtotime($año."-1-".$primer_dia) );
-            $fecha_final=date("Y-m-d H:i:s", strtotime($año."-12-".$ultimo_dia) );
-           
-            if($tipo=='visitas'){
-                return VistasDescargasRevistas::whereBetween('created_at', [$fecha_inicial,  $fecha_final])
-                ->where('tipo_accion','vista')
-                ->get();
-            }else{
-                return VistasDescargasRevistas::whereBetween('created_at', [$fecha_inicial,  $fecha_final])
-                ->where('tipo_accion','descarga')
-                ->get();
-            }
-            
-        }else{
-            $ultimo_dia=$this->getUltimoDiaMes($año,$mes);
-            $fecha_inicial=date("Y-m-d H:i:s", strtotime($año."-".$mes."-".$primer_dia) );
-            $fecha_final=date("Y-m-d H:i:s", strtotime($año."-".$mes."-".$ultimo_dia) );
-           
-            if($tipo=='visitas'){
-                return VistasDescargasRevistas::whereBetween('created_at', [$fecha_inicial,  $fecha_final])
-                ->where('tipo_accion','vista')
-                ->get();
-            }else{
-                return VistasDescargasRevistas::whereBetween('created_at', [$fecha_inicial,  $fecha_final])
-                ->where('tipo_accion','descarga')
-                ->get();
-            }
-        
-        }
-    }
-
-    public function top_visitas_mes_libros($año,$mes){
-        
-        $primer_dia=1;
-        if($mes==0){
-            $ultimo_dia=$this->getUltimoDiaMes($año,12);
-            $fecha_inicial=date("Y-m-d H:i:s", strtotime($año."-1-".$primer_dia) );
-            $fecha_final=date("Y-m-d H:i:s", strtotime($año."-12-".$ultimo_dia) );
-        }else{
-            $ultimo_dia=$this->getUltimoDiaMes($año,$mes);
-            $fecha_inicial=date("Y-m-d H:i:s", strtotime($año."-".$mes."-".$primer_dia) );
-            $fecha_final=date("Y-m-d H:i:s", strtotime($año."-".$mes."-".$ultimo_dia) );
-            }
-        $libros = DB::table('libros as a')
-                ->join('vistas_descargas_libros as b', 'b.id_libro', '=', 'a.id')
-                ->whereBetween('b.created_at', [$fecha_inicial,  $fecha_final])
-                ->where('b.tipo_accion', 'vista')
-                ->select('a.nombre', DB::raw('count(*) as cant_visitas'))
-                ->groupBy('a.nombre')
-                ->orderBy('cant_visitas','desc')
-                ->take(5)
-                ->get();        
-
-        return   json_encode($libros);
-    }
-
-    public function top_visitas_mes_revistas($año,$mes){
-        
         $primer_dia=1;
         if($mes==0){
             $ultimo_dia=$this->getUltimoDiaMes($año,12);
@@ -363,66 +328,15 @@ class EstadisticasController extends Controller
             $fecha_inicial=date("Y-m-d H:i:s", strtotime($año."-".$mes."-".$primer_dia) );
             $fecha_final=date("Y-m-d H:i:s", strtotime($año."-".$mes."-".$ultimo_dia) );
         }
-        $revistas = DB::table('revistas as a')
-                ->join('vistas_descargas_revistas as b', 'b.id_revista', '=', 'a.id')
-                ->whereBetween('b.created_at', [$fecha_inicial,  $fecha_final])
-                ->where('b.tipo_accion', 'vista')
-                ->select('a.nombre', DB::raw('count(*) as cant_visitas'))
-                ->groupBy('a.nombre')
-                ->orderBy('cant_visitas','desc')
-                ->take(5)
-                ->get();        
-
-        return   json_encode($revistas);
-    }
-    
-    public function top_descargas_mes_libros($año,$mes){
-        
-        $primer_dia=1;
-        if($mes==0){
-            $ultimo_dia=$this->getUltimoDiaMes($año,12);
-            $fecha_inicial=date("Y-m-d H:i:s", strtotime($año."-1-".$primer_dia) );
-            $fecha_final=date("Y-m-d H:i:s", strtotime($año."-12-".$ultimo_dia) );
-        }else{
-            $ultimo_dia=$this->getUltimoDiaMes($año,$mes);
-            $fecha_inicial=date("Y-m-d H:i:s", strtotime($año."-".$mes."-".$primer_dia) );
-            $fecha_final=date("Y-m-d H:i:s", strtotime($año."-".$mes."-".$ultimo_dia) );
-            }
-        $libros = DB::table('libros as a')
-                ->join('vistas_descargas_libros as b', 'b.id_libro', '=', 'a.id')
-                ->whereBetween('b.created_at', [$fecha_inicial,  $fecha_final])
-                ->where('b.tipo_accion', 'descarga')
-                ->select('a.nombre', DB::raw('count(*) as cant_visitas'))
-                ->groupBy('a.nombre')
-                ->orderBy('cant_visitas','desc')
-                ->take(5)
-                ->get();        
-
-        return   json_encode($libros);
-    }
-
-    public function top_descargas_mes_revistas($año,$mes){
-        
-        $primer_dia=1;
-        if($mes==0){
-            $ultimo_dia=$this->getUltimoDiaMes($año,12);
-            $fecha_inicial=date("Y-m-d H:i:s", strtotime($año."-1-".$primer_dia) );
-            $fecha_final=date("Y-m-d H:i:s", strtotime($año."-12-".$ultimo_dia) );
-        }else{
-            $ultimo_dia=$this->getUltimoDiaMes($año,$mes);
-            $fecha_inicial=date("Y-m-d H:i:s", strtotime($año."-".$mes."-".$primer_dia) );
-            $fecha_final=date("Y-m-d H:i:s", strtotime($año."-".$mes."-".$ultimo_dia) );
-        }
-        $revistas = DB::table('revistas as a')
-                ->join('vistas_descargas_revistas as b', 'b.id_revista', '=', 'a.id')
-                ->whereBetween('b.created_at', [$fecha_inicial,  $fecha_final])
-                ->where('b.tipo_accion', 'descarga')
-                ->select('a.nombre', DB::raw('count(*) as cant_visitas'))
-                ->groupBy('a.nombre')
-                ->orderBy('cant_visitas','desc')
-                ->take(5)
-                ->get();        
-
-        return   json_encode($revistas);
+        return DB::table('documentos as a')
+        ->join('vistas_descargas_documentos as b', 'b.id_documento', '=', 'a.id')
+        ->whereBetween('b.created_at', [$fecha_inicial,  $fecha_final])
+        ->where('b.tipo_accion',$tipoaccion)
+        ->where('b.tipo_archivo',$tipodocumento)
+        ->select('a.nombre', DB::raw('count(*) as cant'))
+        ->groupBy('a.nombre')
+        ->orderBy('cant','desc')
+        ->take(5)
+        ->get(); 
     }
 }

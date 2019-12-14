@@ -42,47 +42,74 @@ class AudioVisualController extends Controller
      */
     public function store(Request $request)
     {
-         $rules = array(
-            'audiovisual' => 'required|mimetypes:video/mp4',
-            'descripcion' => 'required'
-        );
-        $messages = [
-            'audiovisual.mimetypes' => 'El campo audiovisual debe ser un archivo de tipo: mp4.'
-        ];
-        $error=Validator::make($request->all(),$rules,$messages);
+        $tipo=$request['tipo'];
+        if($tipo=='archivo'){
+            $rules = array(
+                'audiovisual' => 'required|mimetypes:video/mp4',
+                'descripcion' => 'required'
+               // 'imagen' => 'required|mimes:jpg'
+            );
+            $messages = [
+                'audiovisual.mimetypes' => 'El campo audiovisual debe ser un archivo de tipo: mp4.'
+            ];
+            $error=Validator::make($request->all(),$rules,$messages);
+        }else{
+            $rules = array(
+                'nombre' => 'required|unique:audiovisual,nombre',
+                'link' => 'required',
+                'descripcion' => 'required'
+               // 'imagen' => 'required|mimes:jpg'
+            );
+            $error=Validator::make($request->all(),$rules);
+        }
         if($error->fails()){
             return response()->json(['errors' => $error->errors()->all()]);
         }
-
-        //obtenemos el campo file definido en el formulario
-        $file = $request->file('audiovisual');
-        //obtenemos el nombre del archivo
-        $fileName = $file->getClientOriginalName();
-    
-        $audiovisualentrante= AudioVisual::where('nombre',$fileName)->first();
-    
-        if (empty($audiovisualentrante)) {
-            $array= explode('.',$fileName);
+        if($tipo=='archivo'){
+            //obtenemos el campo file definido en el formulario
+            $file = $request->file('audiovisual');
+            //obtenemos el nombre del archivo
+            $fileName = $file->getClientOriginalName();
         
-            $extension=end($array);
-
-            Storage::disk('local')->put('/public/audiovisuales/'.$fileName,file_get_contents($file));
-            $ruta='/public/audiovisuales/'.$fileName;
-            $rutaPublica='/storage/audiovisuales/'.$fileName;
+            $audiovisualentrante= AudioVisual::where('nombre',$fileName)->first();
+        
+            if (empty($audiovisualentrante)) {
+                $array= explode('.',$fileName);
             
+                $extension=end($array);
+
+                Storage::disk('local')->put('/public/audiovisuales/'.$fileName,file_get_contents($file));
+                $ruta='/public/audiovisuales/'.$fileName;
+                $rutaPublica='/storage/audiovisuales/'.$fileName;
+                
+                $audiovisual=  AudioVisual::create([
+                    'nombre' => $fileName,
+                    'descripcion' => $request['descripcion'],
+                    'estado' => $request['estado'],
+                    'extension' => $extension,
+                    'ruta' => $ruta,
+                    'rutaPublica' => $rutaPublica,
+                    'tipo' =>$tipo,
+                    'link' => ''
+                ]);
+            }else{
+                return response()->json(['errors' => 
+                            [0 =>'El Archivo Multimedia ya existe']
+                            ]);
+            }
+
+        }else{
             $audiovisual=  AudioVisual::create([
-                'nombre' => $fileName,
+                'nombre' => $request['nombre'],
                 'descripcion' => $request['descripcion'],
                 'estado' => $request['estado'],
-                'extension' => $extension,
-                'ruta' => $ruta,
-                'rutaPublica' => $rutaPublica
+                'link' => $request['link'],
+                'tipo' => $tipo,
+                'extension' => '',
+                'ruta' => '',
+                'rutaPublica' => ''
             ]);
-        }else{
-            return response()->json(['errors' => 
-                        [0 =>'El Archivo Multimedia ya existe']
-                        ]);
-        }   
+        }
        
        return Response::json($audiovisual);
         
@@ -123,52 +150,92 @@ class AudioVisualController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
-    {
-        $rules = array(
-            'nombre' => 'required',
-            'descripcion' => 'required'
-        );
+    {   
+        $audiovisual  = AudioVisual::find($id);
+        if($audiovisual->tipo=='archivo'){
+            $rules = array(
+                'nombre' => 'required',
+                'descripcion' => 'required'
+            );
+        }else{
+            $rules = array(
+                'nombre' => 'required',
+                'link' => 'required',
+                'descripcion' => 'required'
+            );
+        }
+
         $error=Validator::make($request->all(),$rules);
         if($error->fails()){
             return response()->json(['errors' => $error->errors()->all()]);
         }
 
-        $audiovisual  = AudioVisual::find($id);
-        $nombreNuevo=$request['nombre'].'.'.$audiovisual->extension;
-        $audiovisualentrante= AudioVisual::where('nombre',$nombreNuevo)->first();
-
-        if (empty($audiovisualentrante)) {
-
-            Storage::move('/public/audiovisuales/'.$audiovisual->nombre,
-            '/public/audiovisuales/'.$nombreNuevo);
-                   
-            $ruta='/public/audiovisuales/'.$nombreNuevo;
-            $rutaPublica='/storage/audiovisuales/'.$nombreNuevo;
-
-            $input = [
-                'nombre' => $nombreNuevo,
-                'descripcion' => $request['descripcion'],
-                'estado' => $request['estado'],
-                'ruta' => $ruta,
-                'rutaPublica' => $rutaPublica
-            ];
-        
-            $audiovisual->update($input);
-        }elseif($audiovisualentrante->id==$audiovisual->id){
-
-            $input = [
-                'descripcion' => $request['descripcion'],
-                'estado' => $request['estado']
-            ];
-        
-            $audiovisual->update($input);
+        if($audiovisual->tipo=='archivo'){
+            $nombreNuevo=$request['nombre'].'.'.$audiovisual->extension;
+            $audiovisualentrante= AudioVisual::where('nombre',$nombreNuevo)->first();
+    
+            if (empty($audiovisualentrante)) {
+    
+                Storage::move('/public/audiovisuales/'.$audiovisual->nombre,
+                '/public/audiovisuales/'.$nombreNuevo);
+                       
+                $ruta='/public/audiovisuales/'.$nombreNuevo;
+                $rutaPublica='/storage/audiovisuales/'.$nombreNuevo;
+    
+                $input = [
+                    'nombre' => $nombreNuevo,
+                    'descripcion' => $request['descripcion'],
+                    'estado' => $request['estado'],
+                    'ruta' => $ruta,
+                    'rutaPublica' => $rutaPublica
+                ];
             
+                $audiovisual->update($input);
+            }elseif($audiovisualentrante->id==$audiovisual->id){
+    
+                $input = [
+                    'descripcion' => $request['descripcion'],
+                    'estado' => $request['estado']
+                ];
+            
+                $audiovisual->update($input);
+                
+            }else{
+                return response()->json(['errors' => 
+                            [0 =>'ya existe un Archivo Multimedia con ese nombre']
+                            ]);
+            }
+    
         }else{
-            return response()->json(['errors' => 
-                        [0 =>'ya existe un Archivo Multimedia con ese nombre']
-                        ]);
+            $nombreNuevo=$request['nombre'];
+            $audiovisualentrante= AudioVisual::where('nombre',$nombreNuevo)->first();
+    
+            if (empty($audiovisualentrante)) {
+                $input = [
+                    'nombre' => $request['nombre'],
+                    'descripcion' => $request['descripcion'],
+                    'link' => $request['link'],
+                    'estado' => $request['estado']
+                ];
+            
+                $audiovisual->update($input);
+            }elseif($audiovisualentrante->id==$audiovisual->id){
+    
+                $input = [
+                    'descripcion' => $request['descripcion'],
+                    'link' => $request['link'],
+                    'estado' => $request['estado']
+                ];
+            
+                $audiovisual->update($input);
+                
+            }else{
+                return response()->json(['errors' => 
+                            [0 =>'ya existe un Archivo Multimedia con ese nombre']
+                            ]);
+            }
         }
-
+        
         return Response::json($audiovisual);
     }
 

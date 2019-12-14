@@ -61,22 +61,6 @@ Route::group(['prefix' => '/admin','middleware' => ['auth','admin:1']], function
     Route::get('/gestionarUsuarios/editar/{id}','UsuarioController@edit')->name('formulario_editar_usuario');
     Route::put('/gestionarUsuarios/editar/{id}','UsuarioController@update')->name('editar_usuario');
     Route::get('/gestionarUsuarios/eliminar/{id}','UsuarioController@destroy')->name('eliminar_usuario');
-
-    // --------- REVISTAS ---------
-    Route::get('/gestionarRevistas','RevistaController@index')->name('listar_revistas');                  
-    Route::post('/gestionarRevistas/agregar','RevistaController@store')->name('agregar_revista');
-    Route::get('/gestionarRevistas/editar/{id}','RevistaController@edit')->name('formulario_editar_revista');
-    Route::put('/gestionarRevistas/editar/{id}','RevistaController@update')->name('editar_revista');
-    Route::get('/gestionarRevistas/eliminar/{id}','RevistaController@destroy')->name('eliminar_revista');
-    Route::get('/gestionarRevistas/descargar/{id}','RevistaController@descargar')->name('descargar_revista');
-
-     // --------- LIBROS ---------
-     Route::get('/gestionarLibros','LibroController@index')->name('listar_libros');                  
-     Route::post('/gestionarLibros/agregar','LibroController@store')->name('agregar_libro');
-     Route::get('/gestionarLibros/editar/{id}','LibroController@edit')->name('formulario_editar_libro');
-     Route::put('/gestionarLibros/editar/{id}','LibroController@update')->name('editar_libro');
-     Route::get('/gestionarLibros/eliminar/{id}','LibroController@destroy')->name('eliminar_libro');
-     Route::get('/gestionarLibros/descargar/{id}','LibroController@descargar')->name('descargar_libro');
      
      // --------- CAPACITACIONES ---------
      Route::get('/gestionarCapacitaciones','CapacitacionController@index')->name('listar_capacitaciones');                  
@@ -103,10 +87,8 @@ Route::group(['prefix' => '/admin','middleware' => ['auth','admin:1']], function
      Route::get('/estadisticas/archivos','EstadisticasController@indexArchivos')->name('ver_estadisticas_archivos'); 
      Route::get('/estadisticas/archivos/grafica_visitas/{anio}/{mes}', 'EstadisticasController@visitas_mes')->name('grafica_visitas');
      Route::get('/estadisticas/archivos/grafica_descargas/{anio}/{mes}', 'EstadisticasController@descargas_mes')->name('grafica_descargas');
-     Route::get('/estadisticas/archivos/grafica_visitas_top_libros/{anio}/{mes}', 'EstadisticasController@top_visitas_mes_libros')->name('grafica_visitas_top_libros');
-     Route::get('/estadisticas/archivos/grafica_visitas_top_revistas/{anio}/{mes}', 'EstadisticasController@top_visitas_mes_revistas')->name('grafica_visitas_top_revistas');
-     Route::get('/estadisticas/archivos/grafica_descargas_top_libros/{anio}/{mes}', 'EstadisticasController@top_descargas_mes_libros')->name('grafica_descargas_top_libros');
-     Route::get('/estadisticas/archivos/grafica_descargas_top_revistas/{anio}/{mes}', 'EstadisticasController@top_descargas_mes_revistas')->name('grafica_descargas_top_revistas');
+     Route::get('/estadisticas/archivos/grafica_visitas_top/{anio}/{mes}', 'EstadisticasController@top_visitas_mes')->name('grafica_visitas_top');
+     Route::get('/estadisticas/archivos/grafica_descargas_top/{anio}/{mes}', 'EstadisticasController@top_descargas_mes')->name('grafica_descargas_top');
 
      // --------- SLIDER ---------
      Route::get('/gestionarSlider','SliderController@index')->name('listar_sliders');                  
@@ -124,13 +106,11 @@ Route::group(['prefix' => '/usuariofinal','middleware' => 'auth'], function () {
 
      Route::get('/', 'UsuarioFinalController@index')->name('inicio');
      Route::get('/multimedia', 'UsuarioFinalController@multimedia')->name('multimedia');
-     Route::get('/multimedia/libros', 'UsuarioFinalController@multimediaLibros')->name('multimedia_libros');
-     Route::get('/multimedia/libros/descargar/{id}','LibroController@descargar')->name('descargar_libro_usuariofinal');
-     Route::get('/multimedia/libros/ver/{id}', 'LibroController@ver')->name('ver_libro_usuariofinal');
-     Route::get('/multimedia/revistas', 'UsuarioFinalController@multimediaRevistas')->name('multimedia_revistas');
-     Route::get('/multimedia/revistas/descargar/{id}','RevistaController@descargar')->name('descargar_revista_usuariofinal');
-     Route::get('/multimedia/revistas/ver/{id}', 'RevistaController@ver')->name('ver_revista_usuariofinal');
-
+     Route::get('/multimedia/documentos/{tipo}', 'UsuarioFinalController@multimediaTipoDocumento')->name('multimedia_documentos');
+     Route::get('/multimedia/documentos/descargar/{id}','DocumentoController@descargar')->name('descargar_documento_usuariofinal');
+     Route::get('/multimedia/documentos/ver/{id}', 'DocumentoController@ver')->name('ver_documento_usuariofinal');
+     Route::get('/multimedia/documentos/{tipo}/ver/{id}', 'DocumentoController@ver')->name('ver_documento_usuariofinal2');
+     
      Route::get('/multimedia/videos/ver/{id}', 'AudioVisualController@ver')->name('ver_video_usuariofinal');
      
 });

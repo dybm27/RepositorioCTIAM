@@ -24,7 +24,13 @@ class TipoDocumentosTableSeeder extends Seeder
             'nombre' => 'Infografia',
         ]);
         DB::table('tipodocumento')->insert([
-            'nombre' => 'Otro',
+            'nombre' => 'Libro',
+        ]);
+        DB::table('tipodocumento')->insert([
+            'nombre' => 'Revista',
+        ]);
+        DB::table('tipodocumento')->insert([
+            'nombre' => 'Otros',
         ]);
     }
 }

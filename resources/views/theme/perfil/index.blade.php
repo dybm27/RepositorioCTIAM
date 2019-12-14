@@ -26,7 +26,7 @@
           <h5 class="widget-user-desc">Administrador</h5>
         </div>
         <div class="widget-user-image">
-          <img class="img-circle" src="http://localhost/RepositorioCTIAM/public/assets/adminLTE/dist/img/user2-160x160.jpg" alt="User Avatar">
+          <img class="img-circle" src="{{asset("assets/$theme/dist/img/user2-160x160.jpg")}}" alt="User Avatar">
         </div>
         <div class="box-footer ">
           <div class="row">

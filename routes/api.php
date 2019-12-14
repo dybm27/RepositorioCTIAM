@@ -72,24 +72,6 @@ Route::get('audiovisuales', function () {
         ->toJson();
 });
 
-Route::get('revistas', function () {
-    return datatables()
-        ->eloquent(Revista::query())
-        ->addColumn('descargar','theme.revistas.btnsDescargar')
-        ->addColumn('btns','theme.revistas.btnsIndex')
-        ->rawColumns(['btns','descargar'])
-        ->toJson();
-});
-
-Route::get('libros', function () {
-    return datatables()
-        ->eloquent(Libro::query())
-        ->addColumn('descargar','theme.libros.btnsDescargar')
-        ->addColumn('btns','theme.libros.btnsIndex')
-        ->rawColumns(['btns','descargar'])
-        ->toJson();
-});
-
 Route::get('capacitaciones', function () {
     return datatables()
         ->eloquent(Capacitacion::query())

@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\AudioVisual;
+use App\Documento;
 use App\Libro;
 use App\Revista;
 use App\Slider;
+use App\TipoDocumento;
 use Illuminate\Http\Request;
 use \Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
@@ -19,23 +21,55 @@ class UsuarioFinalController extends Controller
         return view('usuariofinal.inicio.index', compact('sliders'));
     }
 
-    public function multimedia(){
+    public function multimedia(Request $request){
         
-        $libros=Libro::query()->where('estado','visible');
-        $items=Revista::query()->where('estado','visible')
-        ->union($libros)
-        ->orderBy('created_at','desc') 
-        ->get()->toArray();
-     
-        $results = $this->paginacion('page1',12,$items);
+        $nombre=$request->get('nombre');
+        $tipo=$request->get('tipo');
+        if($nombre==null||$tipo=='video'){
+            $documentos=$this->getDocumentos();
+        }else{
+            $documentos=$this->getDocumentosNombre($nombre);
+        }
 
-        $audiovisuales=AudioVisual::query()->where('estado','visible')
-        ->orderBy('created_at','desc')
-        ->get()->toArray();
+        $results = $this->paginacion('page1',12,$documentos);
+
+        if($tipo==null){
+            $audiovisuales=$this->getVideos();
+        }else{
+            $audiovisuales=$this->getVideosNombre($nombre);
+        }
 
         $videos=$this->paginacion( 'page2',8,$audiovisuales);
-        
-        return view('usuariofinal.multimedia.index', compact('results','videos'));
+
+        $tiposdocumentos=TipoDocumento::orderBy('id')->get();
+
+        return view('usuariofinal.multimedia.index', compact('results','videos','tiposdocumentos'));
+    }
+
+    public function getDocumentos(){
+        return Documento::query()->where('estado','visible')
+        ->orderBy('created_at','desc') 
+        ->get()->toArray();
+    }
+
+    public function getDocumentosNombre($nombre){
+        return Documento::query()->where('estado','visible')
+        ->where('nombre','LIKE','%'.$nombre.'%')
+        ->orderBy('created_at','desc') 
+        ->get()->toArray();
+    }
+
+    public function getVideos(){
+        return AudioVisual::query()->where('estado','visible')
+        ->orderBy('created_at','desc')
+        ->get()->toArray();
+    }
+
+    public function getVideosNombre($nombre){
+        return AudioVisual::query()->where('estado','visible')
+        ->where('nombre','LIKE','%'.$nombre.'%')
+        ->orderBy('created_at','desc')
+        ->get()->toArray();
     }
 
     public function paginacion($pageN,$paginas,$array){
@@ -49,25 +83,35 @@ class UsuarioFinalController extends Controller
         'pageName' => $pageN]);
     }
 
-    public function multimediaLibros(){
-        $libros=Libro::query()->where('estado','visible')
+    public function multimediaTipoDocumento(Request $request,$tipo){
+      
+        $nombre=$request->get('nombre');
+        if($nombre==null){
+            $documentos=$this->getDocumentosTipo($tipo);
+        }else{
+            $documentos=$this->getDocumentosTipoNombre($nombre,$tipo);
+        }
+
+        $results = $this->paginacion('page1',12,$documentos);
+
+        $tiposdocumentos=TipoDocumento::orderBy('id')->get();
+        $tipoActivo=$tipo;
+        return view('usuariofinal.multimedia.index2', compact('results','tiposdocumentos','tipoActivo'));
+    } 
+
+    public function getDocumentosTipo($tipo){
+        return Documento::query()->where('estado','visible')
+        ->where('tipodocumento_id',$tipo)
         ->orderBy('created_at','desc') 
-        ->get()
-        ->toArray();
-       
-        $results = $this->paginacion('page1',12,$libros);
-        $tipo='libros';
-        return view('usuariofinal.multimedia.index2', compact('results','tipo'));
+        ->get()->toArray();
     }
 
-    public function multimediaRevistas(){
-        $revistas=Revista::query()->where('estado','visible')
+    public function getDocumentosTipoNombre($nombre,$tipo){
+        return Documento::query()->where('estado','visible')
+        ->where('tipodocumento_id',$tipo)
+        ->where('nombre','LIKE','%'.$nombre.'%')
         ->orderBy('created_at','desc') 
-        ->get()
-        ->toArray();
-       
-        $results = $this->paginacion('page1',12,$revistas);
-        $tipo='revistas';
-        return view('usuariofinal.multimedia.index2', compact('results','tipo'));
+        ->get()->toArray();
     }
+
 }

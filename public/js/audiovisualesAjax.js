@@ -5,11 +5,15 @@ $(document).ready(function(){
     $('#btnAbrirModalAgregarAV').click(function(){
         $('#form_results').html('');
         $('#btnModal').val("add");
+        $("#select").css('display', 'block');
+        $("#audiov").css('display', 'block');
+        $("#tipo").css('display', 'block');
+        $("#audiovisual").prop('type','file');
+        $("#linklabel").css('display', 'block');
+        $("#link").prop('type','text');
         $('#modalT').text('Agregar AudioVisual');
-        $('#nomRev').text("Nuevo AudioVisual");
-        $('#audiovisual').prop('type','file');
-        $('#nombre').prop('type','hidden');
         $('#formAudioVisuales').trigger("reset");
+        cambiarTipo();
         $('#modalAudioVisuales').modal('show');
     });
     
@@ -38,7 +42,8 @@ $(document).ready(function(){
             parametros={
                 'nombre': $('#nombre').val(),
                 'descripcion': $('#descripcion').val(),
-                'estado': $('#estado').val()
+                'estado': $('#estado').val(),
+                'link': $('#link').val()
             };
             my_url += '/editar/' + audiovisual_id;
         }else{
@@ -91,12 +96,26 @@ $(document).ready(function(){
             dataType:"json",
             success:function(data){
                 console.log(data);
-                $('#nomRev').text("Nombre AudioVisual");
-                $('#audiovisual').prop('type','hidden');
-                $('#nombre').prop('type','text');
+                $("#nombre").prop('type', 'text');
+                $("#nomb").css('display', 'block');
+                $("#select").css('display', 'none');
+                $("#audiov").css('display', 'none');
+                $("#tipo").css('display', 'none');
+                $("#audiovisual").prop('type','hidden');
+                
+                if(data.tipo=='archivo'){
+                    $("#linklabel").css('display', 'none');
+                    $("#link").prop('type','hidden');
+                    $('#nombre').val(data.nomsinext);
+                }else{
+                    $("#linklabel").css('display', 'block');
+                    $("#link").prop('type','text');
+                    $("#link").prop('disabled', false);
+                    $("#link").val(data.link);
+                    $('#nombre').val(data.nombre);
+                }                
                 $('#modalT').text('Editar AudioVisual');
                 $('#btnModal').val('update');
-                $('#nombre').val(data.nomsinext);
                 $('#descripcion').val(data.descripcion);
                 $("#estado option[value="+ data.estado +"]").prop("selected",true);
                 $('#audiovisual_id').val(data.id);
@@ -134,4 +153,19 @@ function cerrarModal(modal) {
     $(modal).modal('hide');//ocultamos el modal
     $('body').removeClass('modal-open');//eliminamos la clase del body para poder hacer scroll
     $('.modal-backdrop').remove();//eliminamos el backdrop del modal
+}
+
+function cambiarTipo(){
+    tipo= document.getElementById("tipo");
+	if(tipo.value=='link'){
+        $("#link").prop('disabled', false);
+        $("#audiovisual").prop('disabled', true);
+        $("#nombre").prop('type', 'text');
+        $("#nomb").css('display', 'block');
+    }else if(tipo.value=='archivo'){
+        $("#link").prop('disabled', true);
+        $("#audiovisual").prop('disabled', false);
+        $("#nombre").prop('type', 'hidden');
+        $("#nomb").css('display', 'none');
+    }
 }

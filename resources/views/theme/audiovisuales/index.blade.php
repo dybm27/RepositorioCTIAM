@@ -32,6 +32,7 @@
                                 <th>Nombre</th>
                                 <th>Descripcion</th>
                                 <th>Estado</th>
+                                <th>Tipo</th>
                                 <th>Descargar</th>
                                 <th>Accion</th>
                             </tr>
@@ -62,6 +63,7 @@
                     {data: 'nombre'},
                     {data: 'descripcion'},
                     {data: 'estado'},
+                    {data: 'tipo'},
                     {data: 'descargar'},
                     {data: 'btns'},
                 ],
